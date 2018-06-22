@@ -27,7 +27,7 @@
         },
         {
             "location": "/commands/",
-            "text": "Command Documentation\n\n\nSystem Commands\n\n\n\n\ninfo\n - Gives you information about the JackBot, the Developer and JackSucksAtLife\n\n\nhelp\n - Brings up a simplified version of this page in discord\n\n\nping\n - This response was decently quick, right?\n\n\nbugs\n - Provides the link to report a bug\n\n\nate\n - Active Testing Enviroment (this contains commands that are used when testing the bot)\n\n\n\n\nMemey Commands\n\n\n\n\ndead\n - The baby wipes flavour from the beanboozled challenge is disgusting.\n\n\nvomit\n - The beanboozled flavour vomit is great!\n\n\nimmature\n - Just me being immature as usual\n\n\nmanslaughter\n - I always kill pets on accident - it's not my fault\n\n\nretard\n - I had a massive brain fart here\n\n\nsticktotheformat\n - insert clap here\n\n\nexcited\n - OMG! OMG! I'm so excited!!\n\n\ngtfo\n - I said GET OUT!\n\n\njunk\n - I really like the tesco clubcard collection you got there\n\n\ndump\n - My room is a mess now, ugh.\n\n\ncleaver\n - It's normal to have a cleaver in your clothes, right?\n\n\n\n\nActive Testing Enviroment\n\n\nThese commands are restricted to the BotOwner(s)\n \n\n\n\n\nate-ping\n - In depth ping command\n\n\nate-check\n - Sends multiple checks to the console\n\n\nate-log\n - Sends a log to the console\n\n\nate-error\n - Catches all errors and sends them to the console",
+            "text": "Command Documentation\n\n\nSystem Commands\n\n\n\n\ninfo\n - Gives you information about the JackBot, the Developer and JackSucksAtLife\n\n\nhelp\n - Brings up a simplified version of this page in discord\n\n\nping\n - This response was decently quick, right?\n\n\nbugs\n - Provides the link to report a bug\n\n\nate\n - Active Testing Enviroment (this contains commands that are used when testing the bot)\n\n\n\n\nMemey Commands\n\n\n\n\ndead\n - The baby wipes flavour from the beanboozled challenge is disgusting.\n\n\nvomit\n - The beanboozled flavour vomit is great!\n\n\nimmature\n - Just me being immature as usual\n\n\nmanslaughter\n - I always kill pets on accident - it's not my fault\n\n\nretard\n - I had a massive brain fart here\n\n\nsticktotheformat\n - insert clap here\n\n\nexcited\n - OMG! OMG! I'm so excited!!\n\n\ngtfo\n - I said GET OUT!\n\n\njunk\n - I really like the tesco clubcard collection you got there\n\n\ndump\n - My room is a mess now, ugh.\n\n\ncleaver\n - It's normal to have a cleaver in your clothes, right?\n\n\n\n\nActive Testing Enviroment\n\n\nThese commands are restricted to the BotOwner(s)\n \n\n\n\n\nate-ping\n - In depth ping command\n\n\nate-check\n - Sends multiple checks to the console\n\n\nate-log\n - Sends a log to the console",
             "title": "Commands"
         },
         {
@@ -47,7 +47,7 @@
         },
         {
             "location": "/commands/#active-testing-enviroment",
-            "text": "These commands are restricted to the BotOwner(s)     ate-ping  - In depth ping command  ate-check  - Sends multiple checks to the console  ate-log  - Sends a log to the console  ate-error  - Catches all errors and sends them to the console",
+            "text": "These commands are restricted to the BotOwner(s)     ate-ping  - In depth ping command  ate-check  - Sends multiple checks to the console  ate-log  - Sends a log to the console",
             "title": "Active Testing Enviroment"
         },
         {

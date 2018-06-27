@@ -2,7 +2,7 @@
     "docs": [
         {
             "location": "/",
-            "text": "Welcome to the JackBot Website\n\n\nAbout\n\n\nJackBot is a Discord Bot full of memes, quotes and many other things that are about or relevant to the YouTuber JackSucksAtLife. The original version of this bot was created on the \n22/04/2018\n by \nCairo#2098\n\n\nBot Invite & Info\n\n\nYou can invite the bot by clicking \nhere\n.\n\n\n\n\nSupport Server",
+            "text": "Welcome to the JackBot Website\n\n\nAbout\n\n\nJackBot is a Discord Bot full of memes, quotes and many other things that are about or relevant to the YouTuber JackSucksAtLife. The original version of this bot was created on the \n22/04/2018\n by \nCairo#2098\n\n\nBot Invite & Info\n\n\nYou can invite the bot by clicking \nhere\n.\n\n\n\n\nSupport Server\n\n\n\n\n\n\n\n/*<![CDATA[*/window.zE||(function(e,t,s){var n=window.zE=window.zEmbed=function(){n._.push(arguments)}, a=n.s=e.createElement(t),r=e.getElementsByTagName(t)[0];n.set=function(e){ n.set._.push(e)},n._=[],n.set._=[],a.async=true,a.setAttribute(\"charset\",\"utf-8\"), a.src=\"https://static.zdassets.com/ekr/asset_composer.js?key=\"+s, n.t=+new Date,a.type=\"text/javascript\",r.parentNode.insertBefore(a,r)})(document,\"script\",\"2779fec0-4def-4292-a25d-e5ec2107f2e0\");/*]]>*/",
             "title": "Home"
         },
         {
@@ -22,7 +22,7 @@
         },
         {
             "location": "/#support-server",
-            "text": "",
+            "text": "/*<![CDATA[*/window.zE||(function(e,t,s){var n=window.zE=window.zEmbed=function(){n._.push(arguments)}, a=n.s=e.createElement(t),r=e.getElementsByTagName(t)[0];n.set=function(e){ n.set._.push(e)},n._=[],n.set._=[],a.async=true,a.setAttribute(\"charset\",\"utf-8\"), a.src=\"https://static.zdassets.com/ekr/asset_composer.js?key=\"+s, n.t=+new Date,a.type=\"text/javascript\",r.parentNode.insertBefore(a,r)})(document,\"script\",\"2779fec0-4def-4292-a25d-e5ec2107f2e0\");/*]]>*/",
             "title": "Support Server"
         },
         {

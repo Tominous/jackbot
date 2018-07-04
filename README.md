@@ -1,7 +1,9 @@
 # JackBot's Website Source Code
 
 You can view the official jackbot website by clicking [here](https://cairo2k18.github.io/jackbot).
+
 You may invite jackbot by clicking [here](https://cairo2k18.github.io/jackbot/invite.html).
+
 Join our support server by clicking [here](https://discord.gg/AWEvbyb).
 
 # JackBot's Status

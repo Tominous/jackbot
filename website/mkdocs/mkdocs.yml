@@ -1,0 +1,15 @@
+site_name: JackBot
+site_author: Cairo Mitchell-Acason
+site_url: https://cairo2k18.github.io/jackbot
+site_description: This is the official website and documentation for JackBot. JackBot is a Discord Bot full of memes, quotes and many other things that are about or relevant to the YouTuber JackSucksAtLife.
+google_analytics: ['UA-121552805-1', 'cairo2k18.github.io/jackbot']
+pages:
+    - Home: index.md
+    - Status: status.md
+    - Commands: commands.md
+    - Update Logs: updatelogs.md
+    - Bug Report: bugreport.md
+copyright: Copyright &copy; 2018 <a href="https://twitter.com/CairoNZ">Cairo Mitchell-Acason</a>.
+plugins:
+    - search
+theme: flatly

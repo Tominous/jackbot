@@ -7,7 +7,7 @@ You may invite jackbot by clicking [here](https://cairo2k18.github.io/jackbot/in
 Join our support server by clicking [here](https://discord.gg/AWEvbyb).
 
 # JackBot's Status
-This is where jackbot's status is displayed.
+This is where jackbot's status is displayed
 
 ### [Discord Bots](https://discordbots.org)
 <p><a href="https://discordbots.org/bot/437439973751521280"><img src="https://discordbots.org/api/widget/437439973751521280.svg?usernamecolor=FFFFFF&amp;topcolor=2C2F33" alt="Jackbot-discordbots-embed" /></a></p>

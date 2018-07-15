@@ -2,7 +2,12 @@
 Logs on what has been added to this bot in all of it's updates is listed here.
 The version number goes by **Major** > **Moderate** > **Minor/Hotfix**
 
-### Version 2.1.5 (Current)
+### Version 2.1.6 (Current)
+```diff
++ Fixed bug https://trello.com/c/10L2nq7s
+```
+
+### Version 2.1.5
 ```diff
 + Added jb!swirl
 + Added jb!overnight

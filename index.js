@@ -189,7 +189,7 @@ bot.on("message", function(message){
         case "about": //alias for info
         case "info":
             var embed = new Discord.RichEmbed()
-               .addField("🤖 About This Bot","This bot is a bot full of memes, quotes and many other features that are about JackSucksAtLife. The original version of this bot was created on the **22/04/2018** by `Cairo#2098` in `Discord.JS` a full list of commands can be found by typing `" + prefix.main + "help` or you may continue to read below if you wish to know more about Cairo & JackSucksAtLife.\nﾠ ﾠ")
+               .addField("🤖 About This Bot","This bot is a bot full of memes, quotes and many other features that are about JackSucksAtLife. The original version of this bot was created on the **22/04/2018** by `Cairo#2098` in `Discord.JS` a full list of commands can be found by typing `" + config.prefix + "help` or you may continue to read below if you wish to know more about Cairo & JackSucksAtLife.\nﾠ ﾠ")
                .addField("📹 About JackSucksAtLife","JackSucksAtLife is a YouTuber from England, United Kingdom and plays Minecraft.\n**You can view a one minute introduction to JackSucksAtLife here:**\nhttps://www.youtube.com/watch?v=wBj1ApMc7ls\nﾠ \n**Social Media:**\n<:youtube:437431052596805643> **YouTube:** [JackSucksAtLife](https://youtube.com/JackSucksAtLife)\n<:skycade:437430012086583296> **Skycade:** [ID#3](https://skycade.net/members/3)\n<:twitter:437430284938641408> **Twitter:** [@JackMasseyWelsh](https://twitter.com/JackMasseyWelsh)\n<:instagram:437492253557129227> **Instagram:** [@jackmasseywelsh](https://www.instagram.com/jackmasseywelsh)\n<:discord:437503796730527745> **Discord:** Jack#0320\nﾠ ﾠ")
                .addField("💻 About Cairo (The Developer)","Cairo is a Discordian from South Island, New Zealand and codes basic bots.\nﾠ \n**Social Media:**\n<:skycade:437430012086583296> **Skycade:** [ID#3580](https://skycade.net/members/3580)\n<:twitter:437430284938641408> **Twitter:** [@CairoNZ](https://twitter.com/CairoNZ)\n<:discord:437503796730527745> **Discord:** Cairo#5772")
                .setColor(message.guild.me.displayColor)
@@ -586,12 +586,12 @@ bot.on("message", function(message){
             var embed = new Discord.RichEmbed()
                 .setDescription("<a:no:446899005054648322> **Insufficient Permission(s)** - You must be a BotOwner to use this command.")
                 .setColor(colours.error)
-            message.channel.send(embed);
+            message.channel.send(embed)
             if (message.author.id !== config.botowner) return
             var embed = new Discord.RichEmbed()
                 .setDescription("<a:yes:446899005125820427> **Success** - message sent to the console.")
                 .setColor(colours.success)
-            message.channel.send(embed);
+            message.channel.send(embed)
             console.log(info("SYSTEM NOTICE: Console Responsiveness Check"))
             console.log(warn("SYSTEM WARNING: Ignore all errors listed below"))
             break;

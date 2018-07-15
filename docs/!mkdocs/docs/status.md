@@ -5,3 +5,6 @@
 
 ### [Bots for Discord](https://botsfordiscord.com)
 <p><a href="https://botsfordiscord.com/bot/437439973751521280"><img src="https://botsfordiscord.com/api/v1/bots/437439973751521280/embed?theme=dark" alt="" /></a></p>
+
+### [Bot Invite](https://discordapp.com/oauth2/authorize?client_id=437439973751521280&permissions=8&scope=bot)
+Click above to invite JackBot.

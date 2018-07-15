@@ -2,7 +2,8 @@ package-lock.json
 botlist.html
 authentications.json
 \node_modules
+\docs\!mkdocs\
 \docs\mkdocs\
-\docs\list.html
-\docs\botlist.html
-\docs\embed.zip
+\docs\!private\
+\docs\private\
+\docs\!---z do not delete anything above z---!

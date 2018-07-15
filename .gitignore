@@ -2,8 +2,7 @@ package-lock.json
 botlist.html
 authentications.json
 \node_modules
-\docs\mkdocs\docs
-\docs\mkdocs\mkdocs.yml
+\docs\mkdocs\
 \docs\list.html
 \docs\botlist.html
 \docs\embed.zip

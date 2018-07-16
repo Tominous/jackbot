@@ -1,0 +1,8 @@
+package-lock.json
+botlist.html
+authentications.json
+node_modules/
+docs/!private/
+docs/!mkdocs
+\docs\!---z do not delete anything above z---!\
+*.zip

@@ -1,11 +1,11 @@
-<p align="center"><img src="https://i.imgur.com/iAMBKjV.png" width="219" height="219" /></p>
+<p align="center"><img src="https://i.imgur.com/iAMBKjV.png" width="219" height="219" />
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 ![Bot Version](https://img.shields.io/badge/bot%20version-v2.1.7-blue.svg)
 ![Bot Owner](https://img.shields.io/badge/botowner-Cairo%235772-yellow.svg)
 ![Dependencies](https://img.shields.io/badge/dependencies-up%20to%20date-brightgreen.svg)
 ![Contributions](https://img.shields.io/badge/contributions-welcome-orange.svg)
-[![License](https://img.shields.io/badge/license-AGPL%203.0-red.svg)](https://github.com/Cairo2k18/jackbot/blob/master/LICENSE)
+[![License](https://img.shields.io/badge/license-AGPL%203.0-red.svg)](https://github.com/Cairo2k18/jackbot/blob/master/LICENSE)</p>
 
 ## About JackBot
 JackBot is a Discord Bot full of memes, quotes and many other things that are about or relevant to the YouTuber JackSucksAtLife. The original version of this bot was created on the **22/04/2018** by **Cairo#5772**

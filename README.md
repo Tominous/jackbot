@@ -10,5 +10,3 @@ View jackbot's live status by clicking [here](https://cairo2k18.github.io/jackbo
 
 ### Support Server
 <iframe src="https://discordapp.com/widget?id=437423842244165633&theme=dark" width="300" height="500" allowtransparency="true" frameborder="0"></iframe>
-
-<div class="content center" style="text-align: center;"><img style="border: 4px solid #ff0000; background-position: center center; box-shadow: rgba(255, 58, 58, 0.8) 0px 0px 8px; width: 234px; height: 234px; border-radius: 256px; display: block; margin-left: auto; margin-right: auto;" src="https://pbs.twimg.com/profile_images/1012194400598814720/jAu6uGE3_400x400.jpg" />

@@ -60,6 +60,7 @@ const clean = text => {
 
 const config = require("./config.json");
 const colours = require("./colours.json");
+const donators = require("./donators.json");
 const secrets = require("./authentications.json");
 
 const warn = chalk.keyword('orange');
@@ -142,6 +143,7 @@ bot.on("message", function(message){
                .addField("🌐 Command Documentation","You can view the full list of commands with a little description [here](https://cairo2k18.github.io/jackbot/commands/).\nﾠ ﾠ")
                .addField("⚙️ System Commands", "For a full list of system commands type `jb!system` or click [here](https://cairo2k18.github.io/jackbot/commands/#system-commands).\nﾠ ﾠ")
                .addField("🖼️ Memey Commands", "For a full list of memey commands type `jb!memes` or click [here](https://cairo2k18.github.io/jackbot/commands/#memey-commands).\nﾠ ﾠ")
+               .addField("📹 Video Meme Commands","For a full list of video meme commands type `jb!videomemes` or click [here](https://cairo2k18.github.io/jackbot/commands/#video-meme-commands).\nﾠ ﾠ")
                .addField("💿️ Ate Commands", "For a full list of ATE commands type `jb!ate` or click [here](https://cairo2k18.github.io/jackbot/commands/#active-testing-enviroment).")
                .setColor(message.guild.me.displayColor)
                .setFooter("JackBot | Developed by Cairo#5772", config.botownerpfp)
@@ -150,7 +152,7 @@ bot.on("message", function(message){
         case "system":
             var embed = new Discord.RichEmbed()
                .addField("⚙️ Help: System","All commands use the prefix `jb!`\nIf there are any issues please join the support server [https://discord.gg/AWEvbyb](https://discord.gg/AWEvbyb)\nﾠ ﾠ")
-               .addField("💬 Commands (9)","**|** `info` **|** `links` **|** `support` **|** `website` **|** `invite` **|** `updatelogs` **|**\n**|** `version` **|** `ping` **|** `bugs` **|**")
+               .addField("💬 Commands (12)","**|** `info` **|** `links` **|** `support` **|** `website` **|** `invite` **|** `updatelogs` **|**\n**|** `version` **|** `ping` **|** `bugs` **|** `github` **|** `trello` **|** `donate` **|**")
                .setColor(message.guild.me.displayColor)
                .setFooter("JackBot | Developed by Cairo#5772", config.botownerpfp)
             message.channel.send(embed);
@@ -163,11 +165,20 @@ bot.on("message", function(message){
                .setFooter("JackBot | Developed by Cairo#5772", config.botownerpfp)
             message.channel.send(embed);
             break;
+        case "videomemes":
+            var embed = new Discord.RichEmbed()
+               .addField("📹️ Help: Video Memes","All commands use the prefix `jb!`\nIf there are any issues please join the support server [https://discord.gg/AWEvbyb](https://discord.gg/AWEvbyb)\nﾠ ﾠ")
+               .addField("📝 Note","**__These commands are for the [Donator(s)](https://patreon.com/jackbotofficial) only!__**\nﾠ ﾠ")
+               .addField("💬 Commands (2)","**|** `spin` **|** `scumbag` **|**")
+               .setColor(message.guild.me.displayColor)
+               .setFooter("JackBot | Developed by Cairo#5772", config.botownerpfp)
+            message.channel.send(embed);
+            break;
         case "ate":
             var embed = new Discord.RichEmbed()
                .addField("💿️ Help: Ate","All commands use the prefix `jb!`\nIf there are any issues please join the support server [https://discord.gg/AWEvbyb](https://discord.gg/AWEvbyb)\nﾠ ﾠ")
                .addField("📝 Note","**__These commands are for the BotOwner(s) only!__**\nﾠ ﾠ")
-               .addField("💬 Commands (5)","**|** `ate-ping` **|** `ate-check` **|** `ate-eval` **|** `ate-restart` **|**\n**|** `ate-guilds` **|**")
+               .addField("💬 Commands (4)","**|** `ate-ping` **|** `ate-check` **|** `ate-eval` **|** `ate-guilds` **|**")
                .setColor(message.guild.me.displayColor)
                .setFooter("JackBot | Developed by Cairo#5772", config.botownerpfp)
             message.channel.send(embed);
@@ -227,6 +238,25 @@ bot.on("message", function(message){
                 .setColor(0x3bcc58)
             message.channel.send(embed);
         break;
+        case "github":
+            var embed = new Discord.RichEmbed()
+               .setDescription(":octopus: **I'm open source!** - View jackbot on github [here](https://github.com/cairo2k18/jackbot).")
+               .setColor(0x9654f9)
+            message.channel.send(embed);
+            break;
+        case "trello":
+            var embed = new Discord.RichEmbed()
+               .setDescription(":bulb: **Progress, Bugs, Ideas?** - You can view jackbot's trello [here](https://trello.com/b/vK3U4Qfy).")
+               .setColor(0xf4d716)
+            message.channel.send(embed);
+            break;
+        case "patreon": //alias for donate
+        case "donate":
+            var embed = new Discord.RichEmbed()
+               .setDescription(":heart: **Help support jackbot** - You can donate [here](https://www.patreon.com/jackbotofficial).")
+               .setColor(0xb21313)
+            message.channel.send(embed);
+            break; 
 //////////////////////////////////////////////////////////////////////////////////////
 //  __  __ _____ __  __ _____    ____ ___  __  __ __  __    _    _   _ ____  ____   //
 // |  \/  | ____|  \/  | ____|  / ___/ _ \|  \/  |  \/  |  / \  | \ | |  _ \/ ___|  //
@@ -566,6 +596,53 @@ bot.on("message", function(message){
                .setColor(0x969696)
                .setFooter("By u/xXMLG_R3dd1t3rXx", config.rlogo)
             message.channel.send(embed);
+            break;
+ //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+ // __      _______ _____  ______ ____    __  __ ______ __  __ ______    _____ ____  __  __ __  __          _   _ _____   _____  //
+ // \ \    / /_   _|  __ \|  ____/ __ \  |  \/  |  ____|  \/  |  ____|  / ____/ __ \|  \/  |  \/  |   /\   | \ | |  __ \ / ____| //
+ //  \ \  / /  | | | |  | | |__ | |  | | | \  / | |__  | \  / | |__    | |   | |  | | \  / | \  / |  /  \  |  \| | |  | | (___   //
+ //   \ \/ /   | | | |  | |  __|| |  | | | |\/| |  __| | |\/| |  __|   | |   | |  | | |\/| | |\/| | / /\ \ | . ` | |  | |\___ \  //
+ //    \  /   _| |_| |__| | |____ |__| | | |  | | |____| |  | | |____  | |____ |__| | |  | | |  | |/ ____ \| |\  | |__| |____) | //
+ //     \/   |_____|_____/|______\____/  |_|  |_|______|_|  |_|______|  \_____\____/|_|  |_|_|  |_/_/    \_\_| \_|_____/|_____/  //
+ //                                                                                                                              //
+ //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////      
+        case "spin":
+        if(donators.all.includes(message.author.id)) {
+          var embed = new Discord.RichEmbed()
+               .setDescription("**You spin me right round baby..** :notes:\nﾠ ﾠ")
+               .addField("⏱ File Upload","**This file can take up to 10 seconds for discord to process.**")
+               .setColor(0x4492e5)
+            message.channel.send(embed)
+            message.channel.send({
+              files: [
+                "./assets/spin.mp4"
+              ]
+            })
+        } else {
+            var embed = new Discord.RichEmbed()
+                .setDescription("<a:no:446899005054648322> **Insufficient Permission(s)** - You must be a Level 1 Donator to use this command.")
+                .setColor(colours.error)
+            message.channel.send(embed);
+            }
+            break;
+        case "scumbag":
+        if(donators.all.includes(message.author.id)) {
+          var embed = new Discord.RichEmbed()
+               .setDescription("**You lil' scumbag** :anger:\nﾠ ﾠ")
+               .addField("⏱ File Upload","**This file can take up to 15 seconds for discord to process.**")
+               .setColor(0xd61919)
+            message.channel.send(embed)
+            message.channel.send({
+              files: [
+                "./assets/scumbag.mp4"
+              ]
+            })
+        } else {
+            var embed = new Discord.RichEmbed()
+                .setDescription("<a:no:446899005054648322> **Insufficient Permission(s)** - You must be a Level 1 Donator to use this command.")
+                .setColor(colours.error)
+            message.channel.send(embed);
+            }
             break;
             ///////////////////////////////////////////////////////////////////////////////
             //     _  _____ _____    ____ ___  __  __ __  __    _    _   _ ____  ____    //

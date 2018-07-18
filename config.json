@@ -2,10 +2,11 @@
 	"prefix": "jb!",
 	"botmention": "<@437439973751521280>",
     "cooldown": "1",
-    "version": "2.1.7",
+    "version": "2.2.0",
     "botowner": "208105877838888960",
     "botowneralt": "450209365912322058",
     "botownerpfp": "https://i.imgur.com/wFA5IjZ.gif",
     "ytlogo": "https://i.imgur.com/oTiIAXV.png",
-    "rlogo": "https://vignette.wikia.nocookie.net/speedracer/images/1/10/Reddit.png/revision/latest?cb=20170820160213"
+    "rlogo": "https://vignette.wikia.nocookie.net/speedracer/images/1/10/Reddit.png/revision/latest?cb=20170820160213",
+    "dlogo": "https://i.imgur.com/K9I0Kdr.png"
 }

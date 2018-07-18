@@ -27,13 +27,13 @@
         },
         {
             "location": "/status/",
-            "text": "Status Page\n\n\nDiscord Bots\n\n\n\n\nBots for Discord\n\n\n\n\nBot Invite\n\n\nClick above to invite JackBot.",
+            "text": "Status\n\n\nDiscord Bots\n\n\n\n\nBots for Discord\n\n\n\n\nJackBot Services\n\n\nClick above to view the full statuspage.\n\n\nBot Invite\n\n\nClick above to invite JackBot.",
             "title": "Status"
         },
         {
-            "location": "/status/#status-page",
+            "location": "/status/#status",
             "text": "",
-            "title": "Status Page"
+            "title": "Status"
         },
         {
             "location": "/status/#discord-bots",
@@ -44,6 +44,11 @@
             "location": "/status/#bots-for-discord",
             "text": "",
             "title": "Bots for Discord"
+        },
+        {
+            "location": "/status/#jackbot-services",
+            "text": "Click above to view the full statuspage.",
+            "title": "JackBot Services"
         },
         {
             "location": "/status/#bot-invite",

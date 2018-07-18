@@ -2,27 +2,27 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
      <loc>https://cairo2k18.github.io/jackbot/</loc>
-     <lastmod>2018-07-15</lastmod>
+     <lastmod>2018-07-18</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
      <loc>https://cairo2k18.github.io/jackbot/status/</loc>
-     <lastmod>2018-07-15</lastmod>
+     <lastmod>2018-07-18</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
      <loc>https://cairo2k18.github.io/jackbot/commands/</loc>
-     <lastmod>2018-07-15</lastmod>
+     <lastmod>2018-07-18</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
      <loc>https://cairo2k18.github.io/jackbot/updatelogs/</loc>
-     <lastmod>2018-07-15</lastmod>
+     <lastmod>2018-07-18</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
      <loc>https://cairo2k18.github.io/jackbot/bugreport/</loc>
-     <lastmod>2018-07-15</lastmod>
+     <lastmod>2018-07-18</lastmod>
      <changefreq>daily</changefreq>
     </url>
 </urlset>

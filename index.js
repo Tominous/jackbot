@@ -160,7 +160,7 @@ bot.on("message", function(message){
         case "memes":
             var embed = new Discord.RichEmbed()
                .addField("🖼️ Help: Memes","All commands use the prefix `jb!`\nIf there are any issues please join the support server [https://discord.gg/AWEvbyb](https://discord.gg/AWEvbyb)\nﾠ ﾠ")
-               .addField("💬 Commands (37)","**|** `dead` **|** `gag` **|** `immature` **|** `manslaughter` **|** `retard` **|**\n**|** `sticktotheformat` **|** `excited` **|** `gtfo` **|** `junk` **|** `dump` **|**\n**|** `cleaver` **|** `kazoodrop` **|** `smh` **|** `crotch` **|** `murderer` **|**\n**|** `psychopath` **|** `weird` **|** `alien` **|** `shocked` **|** `uhh` **|** `wtf` **|**\n**|** `singing` **|** `suited` **|** `please` **|** `angry` **|** `angelic` **|**\n**|** `kazooholder` **|** `flamin` **|** `satan` **|** `thinking` **|** `swirl` **|**\n**|** `overnight` **|** `kazoo` **|** `explosion` **|** `derp` **|** `twitterllama` **|**")
+               .addField("💬 Commands (40)","**|** `dead` **|** `gag` **|** `immature` **|** `manslaughter` **|** `retard` **|**\n**|** `sticktotheformat` **|** `excited` **|** `gtfo` **|** `junk` **|** `dump` **|**\n**|** `cleaver` **|** `kazoodrop` **|** `smh` **|** `crotch` **|** `murderer` **|**\n**|** `psychopath` **|** `weird` **|** `alien` **|** `shocked` **|** `uhh` **|** `wtf` **|**\n**|** `singing` **|** `suited` **|** `please` **|** `angry` **|** `angelic` **|**\n**|** `kazooholder` **|** `flamin` **|** `satan` **|** `thinking` **|** `swirl` **|**\n**|** `overnight` **|** `kazoo` **|** `explosion` **|** `derp` **|** `twitterllama` **|**\n**|** `monster` **|** `duet` **|** `broke` **|**")
                .setColor(message.guild.me.displayColor)
                .setFooter("JackBot | Developed by Cairo#5772", config.botownerpfp)
             message.channel.send(embed);
@@ -595,6 +595,30 @@ bot.on("message", function(message){
                .setImage("https://i.redditmedia.com/y0Yd9ZSRem97Q6OjtOVq68ah8LwzLfisT8qZ2Megb_I.png?fit=crop&crop=faces%2Centropy&arh=2&w=960&s=eac65a9e83c9050eec0e3ebf51b3df6b")
                .setColor(0x969696)
                .setFooter("By u/xXMLG_R3dd1t3rXx", config.rlogo)
+            message.channel.send(embed);
+            break;
+        case "monster":
+            var embed = new Discord.RichEmbed()
+               .setDescription("**On the outside I am usually normal..** :smiling_imp:")
+               .setImage("https://i.imgur.com/epEjrM5.png")
+               .setColor(0x9654f9)
+               .setFooter("From video https://youtu.be/POX_wH8nM5o", config.ytlogo)
+            message.channel.send(embed);
+            break;
+        case "duet":
+            var embed = new Discord.RichEmbed()
+               .setDescription("**Dun dun bum dan dun run fun** :violin: :microphone:")
+               .setImage("https://i.imgur.com/6W5mHnv.jpg")
+               .setColor(0xffeec9)
+               .setFooter("From video https://youtu.be/POX_wH8nM5o", config.ytlogo)
+            message.channel.send(embed);
+            break;
+        case "broke":
+            var embed = new Discord.RichEmbed()
+               .setDescription("**I mean it's a bit out of my budget..** :pound:")
+               .setImage("https://i.imgur.com/nIXNB7R.png")
+               .setColor(0xffdddd)
+               .setFooter("From video https://youtu.be/POX_wH8nM5o", config.ytlogo)
             message.channel.send(embed);
             break;
  //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

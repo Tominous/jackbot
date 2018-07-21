@@ -5,7 +5,7 @@
 // | |_| / ___ \ |___| . \| |_) | |_| || |                                                                                     //
 //  \___/_/   \_\____|_|\_\____/ \___/ |_|                                                                                     //
 //                                                                                                                             //
-// THIS BOT WAS CREATED BY CAIRO JOHN MITCHELL-ACASON (Cairo#5772)                                                             //
+// THIS BOT WAS CREATED BY CAIRO JOHN MITCHELL-ACASON (Cairo#4883)                                                             //
 // SELF HOSTING IS NOT SUPPORTED!                                                                                              //
 //                                                                                                                             //
 // Join the support server here: https://discord.gg/AWEvbyb                                                                    //
@@ -15,7 +15,7 @@
 // Vote for us on our DBL listing here: https://discordbots.org/bot/437439973751521280/vote                                    //
 //                                                                                                                             //
 // Support issues and enquieries;                                                                                              // 
-// - Friend Cairo#5772                                                                                                         //
+// - Friend Cairo#4883                                                                                                         //
 // - Join the support server (faster response)                                                                                 //
 // - Bug report https://jackbot.js.org/bugreport                                                                               //
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -37,6 +37,7 @@
 ///////////////////////////////////////////////////////////////////////////////////
 
 const fs = require("fs");
+const pm2 = require("pm2");
 const chalk = require("chalk"); 
 const bfd = require("bfd-api");
 const dbl = require("dblposter");
@@ -86,6 +87,16 @@ const dblposter = new dbl(`${secrets.dbl}`, bot);
 //                                           //
 ///////////////////////////////////////////////
 
+pm2.connect(function(err) {
+  if (err) throw err;
+
+  setTimeout(function worker() {
+    console.log(warn("SYSTEM WARN: Restarting JackBot"));
+    pm2.restart('index', function() {});
+    setTimeout(worker, 3600000);
+  }, 3600000);
+});
+
 bot.on('ready', () => {
 BFD.postCount(bot.guilds.size, bot.user.id);
 });
@@ -104,7 +115,7 @@ bot.on("ready", async () => {
   console.log(main("________________________________________"))
   console.log(main("| JACKBOT (JACKSUCKSATBOT) LEGAL NOTES |"))
   console.log(warn("SYSTEM WARN: This bot uses the AGPL-3.0 license"))
-    console.log(warn("SYSTEM WARN: The original code for this bot was created by Cairo John Mitchell-Acason (Cairo#5772)"))
+  console.log(warn("SYSTEM WARN: The original code for this bot was created by Cairo John Mitchell-Acason (Cairo#4883)"))
   console.log(main("_________________________________________"))
   console.log(main("| JACKBOT (JACKSUCKSATBOT) COMMAND LINE |"))
   console.log(actionSuccess("SYSTEM CONNECTION NOTICE: I have succesfully connected to the Discord Services & API"))
@@ -146,15 +157,15 @@ bot.on("message", function(message){
                .addField("📹 Video Meme Commands","For a full list of video meme commands type `jb!videomemes` or click [here](https://cairo2k18.github.io/jackbot/commands/#video-meme-commands).\nﾠ ﾠ")
                .addField("💿️ Ate Commands", "For a full list of ATE commands type `jb!ate` or click [here](https://cairo2k18.github.io/jackbot/commands/#active-testing-enviroment).")
                .setColor(message.guild.me.displayColor)
-               .setFooter("JackBot | Developed by Cairo#5772", config.botownerpfp)
+               .setFooter("JackBot | Developed by Cairo#4883", config.botownerpfp)
             message.channel.send(embed)
             break;
         case "system":
             var embed = new Discord.RichEmbed()
                .addField("⚙️ Help: System","All commands use the prefix `jb!`\nIf there are any issues please join the support server [https://discord.gg/AWEvbyb](https://discord.gg/AWEvbyb)\nﾠ ﾠ")
-               .addField("💬 Commands (12)","**|** `info` **|** `links` **|** `support` **|** `website` **|** `invite` **|** `updatelogs` **|**\n**|** `version` **|** `ping` **|** `bugs` **|** `github` **|** `trello` **|** `donate` **|**")
+               .addField("💬 Commands (13)","**|** `info` **|** `links` **|** `support` **|** `website` **|** `invite` **|** `updatelogs` **|**\n**|** `version` **|** `ping` **|** `bugs` **|** `github` **|** `trello` **|** `donate` **|** `partner` **|**")
                .setColor(message.guild.me.displayColor)
-               .setFooter("JackBot | Developed by Cairo#5772", config.botownerpfp)
+               .setFooter("JackBot | Developed by Cairo#4883", config.botownerpfp)
             message.channel.send(embed);
             break;
         case "memes":
@@ -162,7 +173,7 @@ bot.on("message", function(message){
                .addField("🖼️ Help: Memes","All commands use the prefix `jb!`\nIf there are any issues please join the support server [https://discord.gg/AWEvbyb](https://discord.gg/AWEvbyb)\nﾠ ﾠ")
                .addField("💬 Commands (40)","**|** `dead` **|** `gag` **|** `immature` **|** `manslaughter` **|** `retard` **|**\n**|** `sticktotheformat` **|** `excited` **|** `gtfo` **|** `junk` **|** `dump` **|**\n**|** `cleaver` **|** `kazoodrop` **|** `smh` **|** `crotch` **|** `murderer` **|**\n**|** `psychopath` **|** `weird` **|** `alien` **|** `shocked` **|** `uhh` **|** `wtf` **|**\n**|** `singing` **|** `suited` **|** `please` **|** `angry` **|** `angelic` **|**\n**|** `kazooholder` **|** `flamin` **|** `satan` **|** `thinking` **|** `swirl` **|**\n**|** `overnight` **|** `kazoo` **|** `explosion` **|** `derp` **|** `twitterllama` **|**\n**|** `monster` **|** `duet` **|** `broke` **|**")
                .setColor(message.guild.me.displayColor)
-               .setFooter("JackBot | Developed by Cairo#5772", config.botownerpfp)
+               .setFooter("JackBot | Developed by Cairo#4883", config.botownerpfp)
             message.channel.send(embed);
             break;
         case "videomemes":
@@ -171,7 +182,7 @@ bot.on("message", function(message){
                .addField("📝 Note","**__These commands are for the [Donator(s)](https://patreon.com/jackbotofficial) only!__**\nﾠ ﾠ")
                .addField("💬 Commands (2)","**|** `spin` **|** `scumbag` **|**")
                .setColor(message.guild.me.displayColor)
-               .setFooter("JackBot | Developed by Cairo#5772", config.botownerpfp)
+               .setFooter("JackBot | Developed by Cairo#4883", config.botownerpfp)
             message.channel.send(embed);
             break;
         case "ate":
@@ -180,7 +191,7 @@ bot.on("message", function(message){
                .addField("📝 Note","**__These commands are for the BotOwner(s) only!__**\nﾠ ﾠ")
                .addField("💬 Commands (4)","**|** `ate-ping` **|** `ate-check` **|** `ate-eval` **|** `ate-guilds` **|**")
                .setColor(message.guild.me.displayColor)
-               .setFooter("JackBot | Developed by Cairo#5772", config.botownerpfp)
+               .setFooter("JackBot | Developed by Cairo#4883", config.botownerpfp)
             message.channel.send(embed);
             break;
 /////////////////////////////////////////////////////////////////////////////////////////////////
@@ -200,9 +211,9 @@ bot.on("message", function(message){
         case "about": //alias for info
         case "info":
             var embed = new Discord.RichEmbed()
-               .addField("🤖 About This Bot","This bot is a bot full of memes, quotes and many other features that are about JackSucksAtLife. The original version of this bot was created on the **22/04/2018** by `Cairo#2098` in `Discord.JS` a full list of commands can be found by typing `" + config.prefix + "help` or you may continue to read below if you wish to know more about Cairo & JackSucksAtLife.\nﾠ ﾠ")
+               .addField("🤖 About This Bot","This bot is a bot full of memes, quotes and many other features that are about JackSucksAtLife. The original version of this bot was created on the **22/04/2018** by `Cairo#4883` in `Discord.JS` a full list of commands can be found by typing `" + config.prefix + "help` or you may continue to read below if you wish to know more about Cairo & JackSucksAtLife.\nﾠ ﾠ")
                .addField("📹 About JackSucksAtLife","JackSucksAtLife is a YouTuber from England, United Kingdom and plays Minecraft.\n**You can view a one minute introduction to JackSucksAtLife here:**\nhttps://www.youtube.com/watch?v=wBj1ApMc7ls\nﾠ \n**Social Media:**\n<:youtube:437431052596805643> **YouTube:** [JackSucksAtLife](https://youtube.com/JackSucksAtLife)\n<:skycade:437430012086583296> **Skycade:** [ID#3](https://skycade.net/members/3)\n<:twitter:437430284938641408> **Twitter:** [@JackMasseyWelsh](https://twitter.com/JackMasseyWelsh)\n<:instagram:437492253557129227> **Instagram:** [@jackmasseywelsh](https://www.instagram.com/jackmasseywelsh)\n<:discord:437503796730527745> **Discord:** Jack#0320\nﾠ ﾠ")
-               .addField("💻 About Cairo (The Developer)","Cairo is a Discordian from South Island, New Zealand and codes basic bots.\nﾠ \n**Social Media:**\n<:skycade:437430012086583296> **Skycade:** [ID#3580](https://skycade.net/members/3580)\n<:twitter:437430284938641408> **Twitter:** [@CairoNZ](https://twitter.com/CairoNZ)\n<:discord:437503796730527745> **Discord:** Cairo#5772")
+               .addField("💻 About Cairo (The Developer)","Cairo is a Discordian from South Island, New Zealand and codes basic bots.\nﾠ \n**Social Media:**\n<:skycade:437430012086583296> **Skycade:** [ID#3580](https://skycade.net/members/3580)\n<:twitter:437430284938641408> **Twitter:** [@CairoNZ](https://twitter.com/CairoNZ)\n<:discord:437503796730527745> **Discord:** Cairo#4883")
                .setColor(message.guild.me.displayColor)
             message.channel.send(embed);
             break;
@@ -214,7 +225,7 @@ bot.on("message", function(message){
                 .addField("🌐 Website", "The bot's website contains the command list, bug report section, a basic overview of the bot and the updatelogs.\n**You can view the website by clicking [here](https://cairo2k18.github.io/jackbot).**\nﾠ ﾠ")
                 .addField("❤️ Support Server", "This is the bot's official discord server which can be used for support and general discussion on the bot, jacksucksatlife.\n**You can join this by clicking [here](https://discord.gg/AWEvbyb).**\nﾠ ﾠ")
                 .addField("🤖 Bot Invite", "**You can invite JackBot by clicking [here](https://discordapp.com/oauth2/authorize?client_id=437439973751521280&permissions=8&scope=bot) or giving this link to your friend:**\n`https://discordapp.com/oauth2/authorize?client_id=437439973751521280&permissions=8&scope=bot`")
-                .setFooter("JackBot | Developed by Cairo#2098", config.botownerpfp)
+                .setFooter("JackBot | Developed by Cairo#4883", config.botownerpfp)
                 .setColor(message.guild.me.displayColor)
             message.channel.send(embed);
             break;
@@ -255,6 +266,15 @@ bot.on("message", function(message){
             var embed = new Discord.RichEmbed()
                .setDescription(":heart: **Help support jackbot** - You can donate [here](https://www.patreon.com/jackbotofficial).")
                .setColor(0xb21313)
+            message.channel.send(embed);
+            break; 
+        case "partner":
+        case "sweatychildren":
+        case "sc":
+            var embed = new Discord.RichEmbed()
+               .setDescription("<:partner:314068430556758017> **__SweatyChildren__** \nWe have partnered with SweatyChildren, join today to get access to exclusive commands only available to use on this server, weekly giveaways to do with the bot and much more.\n[**Click here to join**](https://discord.gg/7Er7Pzt)")
+               .setThumbnail("https://raw.githubusercontent.com/Cairo2k18/jackbot/images/newsclogo2018.jpg")
+               .setColor(0x1400f7)
             message.channel.send(embed);
             break; 
 //////////////////////////////////////////////////////////////////////////////////////

@@ -1,5 +1,6 @@
 {
 	"error": "0xff0000",
 	"success": "0x21ff00",
-	"default": "0xf94513"
+	"default": "0xf94513",
+	"kicklog": "0xff3232"
 }

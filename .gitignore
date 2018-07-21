@@ -1,8 +1,0 @@
-package-lock.json
-authentications.json
-donators.json
-node_modules/
-docs/!private/
-docs/!mkdocs
-assets/
-\docs\!---z do not delete anything above z---!\

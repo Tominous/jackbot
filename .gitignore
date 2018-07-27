@@ -3,6 +3,7 @@ authentications.json
 donators.json
 node_modules/
 docs/!private/
-docs/!mkdocs
+docs/!mkdocs/mkdocs.yml
+docs/!mkdocs/site/
 assets/
 \docs\!---z do not delete anything above z---!\

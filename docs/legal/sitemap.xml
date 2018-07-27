@@ -1,27 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
-     <loc>https://jackbot.js.org/</loc>
+     <loc>https://jackbot.js.org/legal/</loc>
      <lastmod>2018-07-27</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
-     <loc>https://jackbot.js.org/status/</loc>
+     <loc>https://jackbot.js.org/legal/privacy/</loc>
      <lastmod>2018-07-27</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
-     <loc>https://jackbot.js.org/commands/</loc>
+     <loc>https://jackbot.js.org/legal/terms/</loc>
      <lastmod>2018-07-27</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
-     <loc>https://jackbot.js.org/updatelogs/</loc>
-     <lastmod>2018-07-27</lastmod>
-     <changefreq>daily</changefreq>
-    </url>
-    <url>
-     <loc>https://jackbot.js.org/bugreport/</loc>
+     <loc>https://jackbot.js.org/legal/credits/</loc>
      <lastmod>2018-07-27</lastmod>
      <changefreq>daily</changefreq>
     </url>

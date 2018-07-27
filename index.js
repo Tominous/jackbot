@@ -153,7 +153,7 @@ bot.on("message", function(message){
                .addField("🏠️ Help: Menu","All commands use the prefix `jb!`\nIf there are any issues please join the support server [https://discord.gg/AWEvbyb](https://discord.gg/AWEvbyb)\nﾠ ﾠ\n**===============================**\nﾠ ﾠ")
                .addField("🌐 Command Documentation","You can view the full list of commands with a little description [here](https://cairo2k18.github.io/jackbot/commands/).\nﾠ ﾠ")
                .addField("⚙️ System Commands", "For a full list of system commands type `jb!system` or click [here](https://cairo2k18.github.io/jackbot/commands/#system-commands).\nﾠ ﾠ")
-               .addField("🖼️ Memey Commands", "For a full list of memey commands type `jb!memes` or click [here](https://cairo2k18.github.io/jackbot/commands/#memey-commands).\nﾠ ﾠ")
+               .addField("📸️ Memey Commands", "For a full list of memey commands type `jb!memes` or click [here](https://cairo2k18.github.io/jackbot/commands/#memey-commands).\nﾠ ﾠ")
                .addField("📹 Video Meme Commands","For a full list of video meme commands type `jb!videomemes` or click [here](https://cairo2k18.github.io/jackbot/commands/#video-meme-commands).\nﾠ ﾠ")
                .addField("💿️ Ate Commands", "For a full list of ATE commands type `jb!ate` or click [here](https://cairo2k18.github.io/jackbot/commands/#active-testing-enviroment).")
                .setColor(message.guild.me.displayColor)
@@ -170,7 +170,7 @@ bot.on("message", function(message){
             break;
         case "memes":
             var embed = new Discord.RichEmbed()
-               .addField("🖼️ Help: Memes","All commands use the prefix `jb!`\nIf there are any issues please join the support server [https://discord.gg/AWEvbyb](https://discord.gg/AWEvbyb)\nﾠ ﾠ")
+               .addField("📸 Help: Memes","All commands use the prefix `jb!`\nIf there are any issues please join the support server [https://discord.gg/AWEvbyb](https://discord.gg/AWEvbyb)\nﾠ ﾠ")
                .addField("💬 Commands (40)","**|** `dead` **|** `gag` **|** `immature` **|** `manslaughter` **|** `retard` **|**\n**|** `sticktotheformat` **|** `excited` **|** `gtfo` **|** `junk` **|** `dump` **|**\n**|** `cleaver` **|** `kazoodrop` **|** `smh` **|** `crotch` **|** `murderer` **|**\n**|** `psychopath` **|** `weird` **|** `alien` **|** `shocked` **|** `uhh` **|** `wtf` **|**\n**|** `singing` **|** `suited` **|** `please` **|** `angry` **|** `angelic` **|**\n**|** `kazooholder` **|** `flamin` **|** `satan` **|** `thinking` **|** `swirl` **|**\n**|** `overnight` **|** `kazoo` **|** `explosion` **|** `derp` **|** `twitterllama` **|**\n**|** `monster` **|** `duet` **|** `broke` **|**")
                .setColor(message.guild.me.displayColor)
                .setFooter("JackBot | Developed by Cairo#4883", config.botownerpfp)

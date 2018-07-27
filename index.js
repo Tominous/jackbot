@@ -659,7 +659,7 @@ bot.on("message", function(message){
             message.channel.send(embed)
             message.channel.send({
               files: [
-                "./assets/spin.mp4"
+                "./bot-attach/spin.mp4"
               ]
             })
         } else {
@@ -678,7 +678,7 @@ bot.on("message", function(message){
             message.channel.send(embed)
             message.channel.send({
               files: [
-                "./assets/scumbag.mp4"
+                "./bot-attach/scumbag.mp4"
               ]
             })
         } else {

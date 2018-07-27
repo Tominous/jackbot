@@ -1,0 +1,558 @@
+
+
+
+
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      <meta http-equiv="x-ua-compatible" content="ie=edge">
+      
+        <meta name="description" content="This is the official website and documentation for JackBot. JackBot is a Discord Bot full of memes, quotes and many other things that are about or relevant to the YouTuber JackSucksAtLife.">
+      
+      
+        <link rel="canonical" href="https://jackbot.js.org/commands/">
+      
+      
+        <meta name="author" content="Cairo Mitchell-Acason">
+      
+      
+        <meta name="lang:clipboard.copy" content="Copy to clipboard">
+      
+        <meta name="lang:clipboard.copied" content="Copied to clipboard">
+      
+        <meta name="lang:search.language" content="en">
+      
+        <meta name="lang:search.pipeline.stopwords" content="True">
+      
+        <meta name="lang:search.pipeline.trimmer" content="True">
+      
+        <meta name="lang:search.result.none" content="No matching documents">
+      
+        <meta name="lang:search.result.one" content="1 matching document">
+      
+        <meta name="lang:search.result.other" content="# matching documents">
+      
+        <meta name="lang:search.tokenizer" content="[\s\-]+">
+      
+      <link rel="shortcut icon" href="../img/favicon.ico">
+      <meta name="generator" content="mkdocs-0.17.5, mkdocs-material-2.9.2">
+    
+    
+      
+        <title>Commands - JackBot</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/application.ba0fd1a6.css">
+      
+        <link rel="stylesheet" href="../assets/stylesheets/application-palette.6079476c.css">
+      
+      
+        
+        
+        <meta name="theme-color" content="#ef5350">
+      
+    
+    
+      <script src="../assets/javascripts/modernizr.1aa3b519.js"></script>
+    
+    
+      <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+      
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700|Roboto+Mono">
+        <style>body,input{font-family:"Roboto","Helvetica Neue",Helvetica,Arial,sans-serif}code,kbd,pre{font-family:"Roboto Mono","Courier New",Courier,monospace}</style>
+      
+    
+    <link rel="stylesheet" href="../assets/fonts/material-icons.css">
+    
+      <link rel="stylesheet" href="../stylesheets/dark_theme.css">
+    
+      <link rel="stylesheet" href="../stylesheets/codehilite.css">
+    
+      <link rel="stylesheet" href="../stylesheets/twemoji-awesome.css">
+    
+    
+<meta name="theme-color" content="#212121">
+
+<link rel='icon' href='/assets/images/favicon.ico'>
+
+<meta name='apple-mobile-web-app-capable' content='yes'>
+<meta name='mobile-web-app-capable' content='yes'>
+<link rel="manifest" href="/manifest.json">
+
+  </head>
+  
+    
+    
+    <body dir="ltr" data-md-color-primary="red" data-md-color-accent="blue">
+  
+    <svg class="md-svg">
+      <defs>
+        
+        
+      </defs>
+    </svg>
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" data-md-component="overlay" for="__drawer"></label>
+    
+      <a href="#command-documentation" tabindex="1" class="md-skip">
+        Skip to content
+      </a>
+    
+    
+      <header class="md-header" data-md-component="header">
+  <nav class="md-header-nav md-grid">
+    <div class="md-flex">
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <a href="https://jackbot.js.org" title="JackBot" class="md-header-nav__button md-logo">
+          
+            <img src="../img/robot.svg" width="24" height="24">
+          
+        </a>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <label class="md-icon md-icon--menu md-header-nav__button" for="__drawer"></label>
+      </div>
+      <div class="md-flex__cell md-flex__cell--stretch">
+        <div class="md-flex__ellipsis md-header-nav__title" data-md-component="title">
+          
+            
+              <span class="md-header-nav__topic">
+                JackBot
+              </span>
+              <span class="md-header-nav__topic">
+                Commands
+              </span>
+            
+          
+        </div>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        
+          
+            <label class="md-icon md-icon--search md-header-nav__button" for="__search"></label>
+            
+<div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="query" data-md-state="active">
+      <label class="md-icon md-search__icon" for="__search"></label>
+      <button type="reset" class="md-icon md-search__icon" data-md-component="reset" tabindex="-1">
+        &#xE5CD;
+      </button>
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="result">
+          <div class="md-search-result__meta">
+            Type to start searching
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+          
+        
+      </div>
+      
+    </div>
+  </nav>
+</header>
+    
+    <div class="md-container">
+      
+        
+      
+      
+      <main class="md-main">
+        <div class="md-main__inner md-grid" data-md-component="container">
+          
+            
+              <div class="md-sidebar md-sidebar--primary" data-md-component="navigation">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    <nav class="md-nav md-nav--primary" data-md-level="0">
+  <label class="md-nav__title md-nav__title--site" for="__drawer">
+    <span class="md-nav__button md-logo">
+      
+        <img src="../img/robot.svg" width="48" height="48">
+      
+    </span>
+    JackBot
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href=".." title="Home" class="md-nav__link">
+      Home
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../status/" title="Status" class="md-nav__link">
+      Status
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+  
+
+
+  <li class="md-nav__item md-nav__item--active">
+    
+    <input class="md-toggle md-nav__toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+    
+      
+    
+    
+      <label class="md-nav__link md-nav__link--active" for="__toc">
+        Commands
+      </label>
+    
+    <a href="./" title="Commands" class="md-nav__link md-nav__link--active">
+      Commands
+    </a>
+    
+      
+<nav class="md-nav md-nav--secondary">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">Table of contents</label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#help-commands" title=" Help Commands" class="md-nav__link">
+     Help Commands
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#system-commands" title=" System Commands" class="md-nav__link">
+     System Commands
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#memey-commands" title=" Memey Commands" class="md-nav__link">
+     Memey Commands
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#video-meme-commands" title=" Video Meme Commands" class="md-nav__link">
+     Video Meme Commands
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#active-testing-enviroment" title=" Active Testing Enviroment" class="md-nav__link">
+     Active Testing Enviroment
+  </a>
+  
+</li>
+      
+      
+      
+      
+      
+    </ul>
+  
+</nav>
+    
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../updatelogs/" title="Update Logs" class="md-nav__link">
+      Update Logs
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../bugreport/" title="Bug Report" class="md-nav__link">
+      Bug Report
+    </a>
+  </li>
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+<nav class="md-nav md-nav--secondary">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">Table of contents</label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#help-commands" title=" Help Commands" class="md-nav__link">
+     Help Commands
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#system-commands" title=" System Commands" class="md-nav__link">
+     System Commands
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#memey-commands" title=" Memey Commands" class="md-nav__link">
+     Memey Commands
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#video-meme-commands" title=" Video Meme Commands" class="md-nav__link">
+     Video Meme Commands
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#active-testing-enviroment" title=" Active Testing Enviroment" class="md-nav__link">
+     Active Testing Enviroment
+  </a>
+  
+</li>
+      
+      
+      
+      
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          <div class="md-content">
+            <article class="md-content__inner md-typeset">
+              
+                
+                
+                <h1 id="command-documentation"><i class="twa twa-computer"></i> Command Documentation</h1>
+<p><strong>All commands start with the prefix</strong> <code class="codehilite">jb!</code></p>
+<h3 id="help-commands"><i class="twa twa-house"></i> Help Commands</h3>
+<ul>
+<li><code class="codehilite">help</code> - Displays the help screens main menu</li>
+<li><code class="codehilite">system</code> - Displays all of the system commands</li>
+<li><code class="codehilite">memes</code> - Displays all of the memey commands</li>
+<li><code class="codehilite">videomemes</code> - Displays all of the video meme commands</li>
+<li><code class="codehilite">ate</code> - Dispalys all of the ate commands</li>
+</ul>
+<h3 id="system-commands"><i class="twa twa-gear"></i> System Commands</h3>
+<ul>
+<li><code class="codehilite">info</code> - Gives you information about the JackBot, the Developer and JackSucksAtLife</li>
+<li><code class="codehilite">links</code> - Provides links to the Website, Support Server and Bot Invite</li>
+<li><code class="codehilite">support</code> - Alias of <code class="codehilite">links</code></li>
+<li><code class="codehilite">website</code> - Alias of <code class="codehilite">links</code></li>
+<li><code class="codehilite">invite</code> - Alias of <code class="codehilite">links</code> </li>
+<li><code class="codehilite">updatelogs</code> - Links you to the updatelogs</li>
+<li><code class="codehilite">version</code> - Gives you the version the bot is currently running</li>
+<li><code class="codehilite">ping</code> - This response was decently quick, right?</li>
+<li><code class="codehilite">bugs</code> - Provides the link to report a bug</li>
+</ul>
+<h3 id="memey-commands"><i class="twa twa-camera-with-flash"></i> Memey Commands</h3>
+<ul>
+<li><code class="codehilite">dead</code> - The baby wipes flavour from the beanboozled challenge is disgusting.</li>
+<li><code class="codehilite">vomit</code> - The beanboozled flavour vomit is great!</li>
+<li><code class="codehilite">immature</code> - Just me being immature as usual</li>
+<li><code class="codehilite">manslaughter</code> - I always kill pets on accident - it's not my fault</li>
+<li><code class="codehilite">retard</code> - I had a massive brain fart here</li>
+<li><code class="codehilite">sticktotheformat</code> - insert clap here</li>
+<li><code class="codehilite">excited</code> - OMG! OMG! I'm so excited!!</li>
+<li><code class="codehilite">gtfo</code> - I said GET OUT!</li>
+<li><code class="codehilite">junk</code> - I really like the tesco clubcard collection you got there</li>
+<li><code class="codehilite">dump</code> - My room is a mess now, ugh.</li>
+<li><code class="codehilite">cleaver</code> - It's normal to have a cleaver in your clothes, right?</li>
+<li><code class="codehilite">kazoodrop</code> - His behaviour was disgusting</li>
+<li><code class="codehilite">smh</code> - Jesus christ...</li>
+<li><code class="codehilite">crotch</code> - Hehehehhe - I'm just looking down</li>
+<li><code class="codehilite">murderer</code> - DIE YOU WORTHLESS ****</li>
+<li><code class="codehilite">psychopath</code> - Hehehehehe</li>
+<li><code class="codehilite">weird</code> - Just being a bit weird as usual</li>
+<li><code class="codehilite">alien</code> - I have come to invade planet earth</li>
+<li><code class="codehilite">shocked</code> - OML!!!</li>
+<li><code class="codehilite">uhh</code> - Woops..</li>
+<li><code class="codehilite">wtf</code> - Let me reconsider some life choices</li>
+<li><code class="codehilite">singing</code> - Baby, baby, baby ooh</li>
+<li><code class="codehilite">suited</code> - Brother and sister moment, beautiful</li>
+<li><code class="codehilite">please</code> - Get some help</li>
+<li><code class="codehilite">idiot</code> - *insert facepalm here*</li>
+<li><code class="codehilite">angry</code> - B!tch f●●● off</li>
+<li><code class="codehilite">angelic</code> - Hallelujah!</li>
+<li><code class="codehilite">flamin</code> - Damn it's hot</li>
+<li><code class="codehilite">satan</code> - *demonic voice activated*</li>
+<li><code class="codehilite">thinking</code> - Hmmm</li>
+<li><code class="codehilite">swirl</code> - sWirLY</li>
+<li><code class="codehilite">overnight</code> - overnight challenge anyone?</li>
+<li><code class="codehilite">kazoo</code> - the kazoo possesses you</li>
+<li><code class="codehilite">explosion</code> - BOOM</li>
+<li><code class="codehilite">derp</code> - *insertdroolemojihere*</li>
+<li><code class="codehilite">twitterllama</code> - It's official, the grave.</li>
+</ul>
+<h3 id="video-meme-commands"><i class="twa twa-video-camera"></i> Video Meme Commands</h3>
+<p><strong>These commands are restricted to the Donator(s)</strong>
+Become a donator today <a href="https://patreon.com/jackbotofficial">here</a>. </p>
+<ul>
+<li><code class="codehilite">spin</code> - You spin me right round..</li>
+<li><code class="codehilite">scumbag</code> - You lil' scumbag</li>
+</ul>
+<h3 id="active-testing-enviroment"><i class="twa twa-cd"></i> Active Testing Enviroment</h3>
+<p><strong>These commands are restricted to the BotOwner(s)</strong> </p>
+<ul>
+<li><code class="codehilite">ate-ping</code> - In depth ping command</li>
+<li><code class="codehilite">ate-check</code> - Sends multiple checks to the console</li>
+<li><code class="codehilite">ate-guilds</code> - Sends a list of all the guilds</li>
+<li><code class="codehilite">ate-eval</code> Evaluates strings of code</li>
+</ul>
+<p><meta property="og:type" content="website">
+<meta property="og:title" content="JackBot">
+<meta property="og:description" content="This is the official website and documentation for JackBot. JackBot is a Discord Bot full of memes, quotes and many other things that are about or relevant to the YouTuber JackSucksAtLife.">
+<meta name="og:image" content="https://raw.githubusercontent.com/Cairo2k18/jackbot/master/docs/logo2.jpg">
+<meta name="theme-color" content="#FF1919"></p>
+                
+                  
+                
+              
+              
+                
+
+
+              
+            </article>
+          </div>
+        </div>
+      </main>
+      
+        
+<footer class="md-footer">
+  
+    <div class="md-footer-nav">
+      <nav class="md-footer-nav__inner md-grid">
+        
+          <a href="../status/" title="Status" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+            <div class="md-flex__cell md-flex__cell--shrink">
+              <i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
+            </div>
+            <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
+              <span class="md-flex__ellipsis">
+                <span class="md-footer-nav__direction">
+                  Previous
+                </span>
+                Status
+              </span>
+            </div>
+          </a>
+        
+        
+          <a href="../updatelogs/" title="Update Logs" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
+            <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
+              <span class="md-flex__ellipsis">
+                <span class="md-footer-nav__direction">
+                  Next
+                </span>
+                Update Logs
+              </span>
+            </div>
+            <div class="md-flex__cell md-flex__cell--shrink">
+              <i class="md-icon md-icon--arrow-forward md-footer-nav__button"></i>
+            </div>
+          </a>
+        
+      </nav>
+    </div>
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-footer-copyright">
+        
+          <div class="md-footer-copyright__highlight">
+            Copyright &copy; 2018 <a href="https://twitter.com/CairoNZ">Cairo Mitchell-Acason</a><br>Copyright &copy; 2018 Twitter, Inc. Graphics licensed under <a href="https://creativecommons.org/licenses/by/4.0/">CC-BY 4.0</a><br>You may view the JackBot Legal website by clicking <a href="https://jackbot.js.org/legal">here</a>
+          </div>
+        
+        powered by
+        <a href="https://www.mkdocs.org">MkDocs</a>
+        and
+        <a href="https://squidfunk.github.io/mkdocs-material/">
+          Material for MkDocs</a>
+      </div>
+      
+        
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    
+      <script src="../assets/javascripts/application.a59e2a89.js"></script>
+      
+      <script>app.initialize({version:"0.17.5",url:{base:".."}})</script>
+      
+    
+    
+      
+        <script>!function(e,a,t,n,o,c,i){e.GoogleAnalyticsObject=o,e.ga=e.ga||function(){(e.ga.q=e.ga.q||[]).push(arguments)},e.ga.l=1*new Date,c=a.createElement(t),i=a.getElementsByTagName(t)[0],c.async=1,c.src="https://www.google-analytics.com/analytics.js",i.parentNode.insertBefore(c,i)}(window,document,"script",0,"ga"),ga("create","UA-121552805-1","cairo2k18.github.io/jackbot"),ga("set","anonymizeIp",!0),ga("send","pageview");var links=document.getElementsByTagName("a");if(Array.prototype.map.call(links,function(e){e.host!=document.location.host&&e.addEventListener("click",function(){var a=e.getAttribute("data-md-action")||"follow";ga("send","event","outbound",a,e.href)})}),document.forms.search){var query=document.forms.search.query;query.addEventListener("blur",function(){if(this.value){var e=document.location.pathname;ga("send","pageview",e+"?q="+this.value)}})}</script>
+      
+    
+  </body>
+</html>

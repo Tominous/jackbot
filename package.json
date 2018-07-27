@@ -17,7 +17,7 @@
     "Github",
     "Cairo#5772"
   ],
-  "author": "Cairo John Mitchell-Acason (Cairo#5772)",
+  "author": "Cairo John Mitchell-Acason (Cairo#4883)",
   "license": "AGPL-3.0",
   "dependencies": {
     "bfd-api": "^0.2.6",

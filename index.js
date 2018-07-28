@@ -61,7 +61,7 @@ const clean = text => {
 
 const config = require("./config.json");
 const colours = require("./colours.json");
-const donators = require("./donators.json");
+const perm = require("./perms.json");
 const secrets = require("./authentications.json");
 
 const warn = chalk.keyword('orange');
@@ -131,6 +131,13 @@ bot.on("message", function(message){
 
     const args = message.content.slice(config.prefix.length).trim().split(/ +/g);
 
+    if(perm.blacklisted.includes(message.author.id)) 
+    	        var embed = new Discord.RichEmbed()
+                   .setDescription("<a:no:446899005054648322> **Blacklisted** - You have been blacklisted from using JackBot :(")
+                   .setColor(colours.error)
+                message.channel.send(embed);
+    if(perm.blacklisted.includes(message.author.id)) return
+
     if (message.channel instanceof Discord.DMChannel)
                 var embed = new Discord.RichEmbed()
                    .setDescription("<a:no:446899005054648322> **Guilds Only** - You cannot use me in DMs.")
@@ -171,7 +178,7 @@ bot.on("message", function(message){
         case "memes":
             var embed = new Discord.RichEmbed()
                .addField("📸 Help: Memes","All commands use the prefix `jb!`\nIf there are any issues please join the support server [https://discord.gg/AWEvbyb](https://discord.gg/AWEvbyb)\nﾠ ﾠ")
-               .addField("💬 Commands (40)","**|** `dead` **|** `gag` **|** `immature` **|** `manslaughter` **|** `retard` **|**\n**|** `sticktotheformat` **|** `excited` **|** `gtfo` **|** `junk` **|** `dump` **|**\n**|** `cleaver` **|** `kazoodrop` **|** `smh` **|** `crotch` **|** `murderer` **|**\n**|** `psychopath` **|** `weird` **|** `alien` **|** `shocked` **|** `uhh` **|** `wtf` **|**\n**|** `singing` **|** `suited` **|** `please` **|** `angry` **|** `angelic` **|**\n**|** `kazooholder` **|** `flamin` **|** `satan` **|** `thinking` **|** `swirl` **|**\n**|** `overnight` **|** `kazoo` **|** `explosion` **|** `derp` **|** `twitterllama` **|**\n**|** `monster` **|** `duet` **|** `broke` **|**")
+               .addField("💬 Commands (43)","**|** `dead` **|** `gag` **|** `immature` **|** `manslaughter` **|** `retard` **|**\n**|** `sticktotheformat` **|** `excited` **|** `gtfo` **|** `junk` **|** `dump` **|**\n**|** `cleaver` **|** `kazoodrop` **|** `smh` **|** `crotch` **|** `murderer` **|**\n**|** `psychopath` **|** `weird` **|** `alien` **|** `shocked` **|** `uhh` **|** `wtf` **|**\n**|** `singing` **|** `suited` **|** `please` **|** `angry` **|** `angelic` **|**\n**|** `kazooholder` **|** `flamin` **|** `satan` **|** `thinking` **|** `swirl` **|**\n**|** `overnight` **|** `kazoo` **|** `explosion` **|** `derp` **|** `twitterllama` **|**\n**|** `monster` **|** `duet` **|** `broke` **|** `paidpromotion` **|** `nose` **|**\n**|** `bloodyhell` **|**")
                .setColor(message.guild.me.displayColor)
                .setFooter("JackBot | Developed by Cairo#4883", config.botownerpfp)
             message.channel.send(embed);
@@ -641,6 +648,30 @@ bot.on("message", function(message){
                .setFooter("From video https://youtu.be/POX_wH8nM5o", config.ytlogo)
             message.channel.send(embed);
             break;
+        case "paidpromotion":
+            var embed = new Discord.RichEmbed()
+               .setDescription("**__Includes paid promotion__ NOOOOO!** :dollar:")
+               .setImage("https://raw.githubusercontent.com/Cairo2k18/jackbot/master/bot-attach/promotion.png")
+               .setColor(0x5cd330)
+               .setFooter("From video https://youtu.be/ViA1s0_FJPc", config.ytlogo)
+            message.channel.send(embed);
+            break;
+        case "nose":
+            var embed = new Discord.RichEmbed()
+               .setDescription("**My nose is on a fence post!** :joy:")
+               .setImage("https://raw.githubusercontent.com/Cairo2k18/jackbot/master/bot-attach/nose.png")
+               .setColor(0xffe0e0)
+               .setFooter("From video https://youtu.be/99N69wwBXK0", config.ytlogo)
+            message.channel.send(embed);
+            break;
+        case "bloodyhell":
+            var embed = new Discord.RichEmbed()
+               .setDescription("**Oh bloody hell..** :loud_sound:")
+               .setImage("https://raw.githubusercontent.com/Cairo2k18/jackbot/master/bot-attach/bloodyhell.png")
+               .setColor(0xb7a8a8)
+               .setFooter("From video https://youtu.be/99N69wwBXK0", config.ytlogo)
+            message.channel.send(embed);
+            break;
  //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
  // __      _______ _____  ______ ____    __  __ ______ __  __ ______    _____ ____  __  __ __  __          _   _ _____   _____  //
  // \ \    / /_   _|  __ \|  ____/ __ \  |  \/  |  ____|  \/  |  ____|  / ____/ __ \|  \/  |  \/  |   /\   | \ | |  __ \ / ____| //
@@ -651,7 +682,7 @@ bot.on("message", function(message){
  //                                                                                                                              //
  //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////      
         case "spin":
-        if(donators.all.includes(message.author.id)) {
+        if(perm.alldonor.includes(message.author.id)) {
           var embed = new Discord.RichEmbed()
                .setDescription("**You spin me right round baby..** :notes:\nﾠ ﾠ")
                .addField("⏱ File Upload","**This file can take up to 10 seconds for discord to process.**")
@@ -670,7 +701,7 @@ bot.on("message", function(message){
             }
             break;
         case "scumbag":
-        if(donators.all.includes(message.author.id)) {
+        if(perm.alldonor.includes(message.author.id)) {
           var embed = new Discord.RichEmbed()
                .setDescription("**You lil' scumbag** :anger:\nﾠ ﾠ")
                .addField("⏱ File Upload","**This file can take up to 15 seconds for discord to process.**")

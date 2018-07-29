@@ -1,7 +1,7 @@
 <p align="center"><img src="https://i.imgur.com/iAMBKjV.png" width="219" height="219" />
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-![Bot Version](https://img.shields.io/badge/bot%20version-v2.2.3-blue.svg)
+![Bot Version](https://img.shields.io/badge/bot%20version-v2.3.0-blue.svg)
 ![Bot Owner](https://img.shields.io/badge/botowner-Cairo%235772-yellow.svg)
 ![Dependencies](https://img.shields.io/badge/dependencies-up%20to%20date-brightgreen.svg)
 ![Contributions](https://img.shields.io/badge/contributions-welcome-orange.svg)

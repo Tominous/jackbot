@@ -2,5 +2,12 @@
 	"error": "0xff0000",
 	"success": "0x21ff00",
 	"default": "0xf94513",
-	"kicklog": "0xff3232"
+	"joinbotlog": "0x56e011",
+	"leavebotlog": "0xe01111",
+	"cmdbotlog": "0x1086e0",
+	"outagebotlog": "0xe06710",
+	"errbotlog": "0xff0022",
+	"readybotlog": "0x78b358",
+	"stopbotlog": "0xbf122e",
+	"restartbotlog": "0xffae26"
 }

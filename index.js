@@ -41,7 +41,9 @@ const pm2 = require("pm2");
 const chalk = require("chalk"); 
 const bfd = require("bfd-api");
 const dbl = require("dblposter");
+const weather = require("weather-js");
 const Discord = require("discord.js");
+const snekfetch = require("snekfetch");
 
 ////////////////////////////////////////////////////////////////////
 //   ____  _____ _____ ___ _   _ ___ _____ ___ ___  _   _ ____    //
@@ -87,11 +89,18 @@ const dblposter = new dbl(`${secrets.dbl}`, bot);
 //                                           //
 ///////////////////////////////////////////////
 
+
 pm2.connect(function(err) {
   if (err) throw err;
 
   setTimeout(function worker() {
-    console.log(warn("SYSTEM WARN: Restarting JackBot"));
+    let autobotlogsrestart = bot.guilds.get(secrets.logserver).channels.get(secrets.logchannel);
+    var embed = new Discord.RichEmbed()
+       .setAuthor("Bot Account Restart")
+       .setThumbnail("https://emojipedia-us.s3.amazonaws.com/thumbs/120/twitter/141/orange-heart_1f9e1.png")
+       .setDescription(`**Current Guild Count:** ${bot.guilds.size}\n**Current Bot Uptime:** ${bot.uptime}ms\n**Restart Type:** Automatic`)
+       .setColor(colours.restartbotlog)
+    botlogsrestart.send(embed);
     pm2.restart('index', function() {});
     setTimeout(worker, 3600000);
   }, 3600000);
@@ -99,10 +108,60 @@ pm2.connect(function(err) {
 
 bot.on('ready', () => {
 BFD.postCount(bot.guilds.size, bot.user.id);
+snekfetch.post(`https://listcord.com/api/bot/${bot.user.id}/guilds`)
+  .set('Content-Type', 'application/json')
+  .set('token', secrets.listcord)
+  .send({"guilds": bot.guilds.size })
+  .catch(err => console.log(err))
 });
 
-bot.on('guildCreate', (g) => { BFD.postCount(bot.guilds.size, bot.user.id) });
-bot.on('guildDelete', (g) => { BFD.postCount(bot.guilds.size, bot.user.id) });
+bot.on('guildCreate', () => {
+BFD.postCount(bot.guilds.size, bot.user.id);
+snekfetch.post(`https://listcord.com/api/bot/${bot.user.id}/guilds`)
+  .set('Content-Type', 'application/json')
+  .set('token', secrets.listcord)
+  .send({"guilds": bot.guilds.size })
+  .catch(err => console.log(err))
+});
+
+bot.on('guildDelete', () => {
+BFD.postCount(bot.guilds.size, bot.user.id);
+snekfetch.post(`https://listcord.com/api/bot/${bot.user.id}/guilds`)
+  .set('Content-Type', 'application/json')
+  .set('token', secrets.listcord)
+  .send({"guilds": bot.guilds.size })
+  .catch(err => console.log(err))
+});
+
+bot.on("guildCreate", function(message){
+  let botlogscre = bot.guilds.get(secrets.logserver).channels.get(secrets.logchannel);
+  var embed = new Discord.RichEmbed()
+     .setAuthor("Guild Join Event")
+     .setThumbnail("https://emojipedia-us.s3.amazonaws.com/thumbs/120/twitter/141/inbox-tray_1f4e5.png")
+     .setDescription(`**Current Guild Count:** ${bot.guilds.size}\n**DBL Listing:** [here](https://discordbots.org/bot/437439973751521280)\n**BFD Listing:** [here](https://botsfordiscord.com/bot/437439973751521280)`)
+     .setColor(colours.joinbotlog)
+  botlogscre.send(embed);
+});
+
+bot.on("guildDelete", function(message){
+  let botlogsdel = bot.guilds.get(secrets.logserver).channels.get(secrets.logchannel);
+  var embed = new Discord.RichEmbed()
+     .setAuthor("Guild Leave Event")
+     .setThumbnail("https://emojipedia-us.s3.amazonaws.com/thumbs/120/twitter/141/outbox-tray_1f4e4.png")
+     .setDescription(`**Current Guild Count:** ${bot.guilds.size}\n**DBL Listing:** [here](https://discordbots.org/bot/437439973751521280)\n**BFD Listing:** [here](https://botsfordiscord.com/bot/437439973751521280)`)
+     .setColor(colours.leavebotlog)
+  botlogsdel.send(embed);
+});
+
+bot.on("guildUnavailable", function(message){
+  let botlogsout = bot.guilds.get(secrets.logserver).channels.get(secrets.logchannel);
+  var embed = new Discord.RichEmbed()
+     .setAuthor("Guild Outage Event")
+     .setThumbnail("https://emojipedia-us.s3.amazonaws.com/thumbs/120/twitter/141/fire_1f525.png")
+     .setDescription(`**Discord Status:** [here](https://status.discordapp.com)\n**Discord Twitter:** [here](https://twitter.com/discordapp)\n**Discord Instagram:** [here](https://instagram.com/discordapp)`)
+     .setColor(colours.outagebotlog)
+  botlogsout.send(embed);
+});
 
 bot.on('ready', () => {
   bot.user.setActivity('JackSucksAtLife Memes', { type: 'WATCHING' }); //sets status
@@ -121,6 +180,13 @@ bot.on("ready", async () => {
   console.log(actionSuccess("SYSTEM CONNECTION NOTICE: I have succesfully connected to the Discord Services & API"))
   console.log(botinfo("SYSTEM BOTINFO NOTICE: I am currently in " + bot.guilds.size + " guilds"))
   console.log(botinfo("SYSTEM BOTINFO NOTICE: Further information can be viewed below"))
+  let botlogsready = bot.guilds.get(secrets.logserver).channels.get(secrets.logchannel);
+  var embed = new Discord.RichEmbed()
+     .setAuthor("Bot Account Online")
+     .setThumbnail("https://emojipedia-us.s3.amazonaws.com/thumbs/120/twitter/141/green-heart_1f49a.png")
+     .setDescription(`**Current Guild Count:** ${bot.guilds.size}\n**Current Bot Uptime:** ${bot.uptime}ms\n`)
+     .setColor(colours.readybotlog)
+  botlogsready.send(embed);
 });
 
 bot.on("message", function(message){
@@ -131,19 +197,33 @@ bot.on("message", function(message){
 
     const args = message.content.slice(config.prefix.length).trim().split(/ +/g);
 
-    if(perm.blacklisted.includes(message.author.id)) 
-    	        var embed = new Discord.RichEmbed()
+    if(perm.blacklisted.includes(message.author.id)) {
+    	          var embed = new Discord.RichEmbed()
                    .setDescription("<a:no:446899005054648322> **Blacklisted** - You have been blacklisted from using JackBot :(")
                    .setColor(colours.error)
                 message.channel.send(embed);
-    if(perm.blacklisted.includes(message.author.id)) return
+                var botlogserr = bot.guilds.get(secrets.logserver).channels.get(secrets.logchannel);
+                var embed = new Discord.RichEmbed()
+                   .setAuthor("Error Event")
+                   .setThumbnail("https://emojipedia-us.s3.amazonaws.com/thumbs/120/twitter/141/police-cars-revolving-light_1f6a8.png")
+                   .setDescription(`**Guild Name:** ${message.guild.name}\n**Guild ID:** ${message.guild.id}\n**User Name:** ${message.author.username}#${message.author.discriminator}\n**User ID:** ${message.author.id}\n**Error Type:** User Blacklisted`)
+                   .setColor(colours.errbotlog)
+                return botlogserr.send(embed);
+    } else
 
-    if (message.channel instanceof Discord.DMChannel)
+    if (message.channel instanceof Discord.DMChannel) {
                 var embed = new Discord.RichEmbed()
                    .setDescription("<a:no:446899005054648322> **Guilds Only** - You cannot use me in DMs.")
                    .setColor(colours.error)
                 message.channel.send(embed);
-    if (message.channel instanceof Discord.DMChannel) return
+                var botlogserr = bot.guilds.get(secrets.logserver).channels.get(secrets.logchannel);
+                var embed = new Discord.RichEmbed()
+                   .setAuthor("Error Event")
+                   .setThumbnail("https://emojipedia-us.s3.amazonaws.com/thumbs/120/twitter/141/police-cars-revolving-light_1f6a8.png")
+                   .setDescription(`**Guild Name:** ${message.guild.name}\n**Guild ID:** ${message.guild.id}\n**User Name:** ${message.author.username}#${message.author.discriminator}\n**User ID:** ${message.author.id}\n**Error Type:** Commands in DMs`)
+                   .setColor(colours.errbotlog)
+                return botlogserr.send(embed);
+    } else
 
     switch (args[0].toLowerCase()){
 /////////////////////////////////////////////////////////////////////////////////////
@@ -162,18 +242,33 @@ bot.on("message", function(message){
                .addField("⚙️ System Commands", "For a full list of system commands type `jb!system` or click [here](https://cairo2k18.github.io/jackbot/commands/#system-commands).\nﾠ ﾠ")
                .addField("📸️ Memey Commands", "For a full list of memey commands type `jb!memes` or click [here](https://cairo2k18.github.io/jackbot/commands/#memey-commands).\nﾠ ﾠ")
                .addField("📹 Video Meme Commands","For a full list of video meme commands type `jb!videomemes` or click [here](https://cairo2k18.github.io/jackbot/commands/#video-meme-commands).\nﾠ ﾠ")
+               .addField("🔧 Utility Commands","For a full list of video meme commands type `jb!utilities` or click [here](https://cairo2k18.github.io/jackbot/commands/#utility-commands).\nﾠ ﾠ")
                .addField("💿️ Ate Commands", "For a full list of ATE commands type `jb!ate` or click [here](https://cairo2k18.github.io/jackbot/commands/#active-testing-enviroment).")
                .setColor(message.guild.me.displayColor)
                .setFooter("JackBot | Developed by Cairo#4883", config.botownerpfp)
-            message.channel.send(embed)
+            message.channel.send(embed);
+            var botlogscmd = bot.guilds.get(secrets.logserver).channels.get(secrets.logchannel);
+            var embed = new Discord.RichEmbed()
+               .setAuthor("Command Run Event")
+               .setThumbnail("https://emojipedia-us.s3.amazonaws.com/thumbs/120/twitter/141/incoming-envelope_1f4e8.png")
+               .setDescription(`**Guild Name:** ${message.guild.name}\n**Guild ID:** ${message.guild.id}\n**User Name:** ${message.author.username}#${message.author.discriminator}\n**User ID:** ${message.author.id}\n**Command:** \`${config.prefix}help\``)
+               .setColor(colours.cmdbotlog)
+            botlogscmd.send(embed);
             break;
         case "system":
             var embed = new Discord.RichEmbed()
                .addField("⚙️ Help: System","All commands use the prefix `jb!`\nIf there are any issues please join the support server [https://discord.gg/AWEvbyb](https://discord.gg/AWEvbyb)\nﾠ ﾠ")
-               .addField("💬 Commands (13)","**|** `info` **|** `links` **|** `support` **|** `website` **|** `invite` **|** `updatelogs` **|**\n**|** `version` **|** `ping` **|** `bugs` **|** `github` **|** `trello` **|** `donate` **|** `partner` **|**")
+               .addField("💬 Commands (15)","**|** `info` **|** `links` **|** `support` **|** `website` **|** `invite` **|** `updatelogs` **|**\n**|** `version` **|** `ping` **|** `bugs` **|** `github` **|** `trello` **|** `donate` **|**\n**|** `partner` **|** `vote` **|** `list` **|**")
                .setColor(message.guild.me.displayColor)
                .setFooter("JackBot | Developed by Cairo#4883", config.botownerpfp)
             message.channel.send(embed);
+            var botlogscmd = bot.guilds.get(secrets.logserver).channels.get(secrets.logchannel);
+            var embed = new Discord.RichEmbed()
+               .setAuthor("Command Run Event")
+               .setThumbnail("https://emojipedia-us.s3.amazonaws.com/thumbs/120/twitter/141/incoming-envelope_1f4e8.png")
+               .setDescription(`**Guild Name:** ${message.guild.name}\n**Guild ID:** ${message.guild.id}\n**User Name:** ${message.author.username}#${message.author.discriminator}\n**User ID:** ${message.author.id}\n**Command:** \`${config.prefix}system\``)
+               .setColor(colours.cmdbotlog)
+            botlogscmd.send(embed);
             break;
         case "memes":
             var embed = new Discord.RichEmbed()
@@ -182,6 +277,13 @@ bot.on("message", function(message){
                .setColor(message.guild.me.displayColor)
                .setFooter("JackBot | Developed by Cairo#4883", config.botownerpfp)
             message.channel.send(embed);
+            var botlogscmd = bot.guilds.get(secrets.logserver).channels.get(secrets.logchannel);
+            var embed = new Discord.RichEmbed()
+               .setAuthor("Command Run Event")
+               .setThumbnail("https://emojipedia-us.s3.amazonaws.com/thumbs/120/twitter/141/incoming-envelope_1f4e8.png")
+               .setDescription(`**Guild Name:** ${message.guild.name}\n**Guild ID:** ${message.guild.id}\n**User Name:** ${message.author.username}#${message.author.discriminator}\n**User ID:** ${message.author.id}\n**Command:** \`${config.prefix}memes\``)
+               .setColor(colours.cmdbotlog)
+            botlogscmd.send(embed);
             break;
         case "videomemes":
             var embed = new Discord.RichEmbed()
@@ -191,15 +293,44 @@ bot.on("message", function(message){
                .setColor(message.guild.me.displayColor)
                .setFooter("JackBot | Developed by Cairo#4883", config.botownerpfp)
             message.channel.send(embed);
+            var botlogscmd = bot.guilds.get(secrets.logserver).channels.get(secrets.logchannel);
+            var embed = new Discord.RichEmbed()
+               .setAuthor("Command Run Event")
+               .setThumbnail("https://emojipedia-us.s3.amazonaws.com/thumbs/120/twitter/141/incoming-envelope_1f4e8.png")
+               .setDescription(`**Guild Name:** ${message.guild.name}\n**Guild ID:** ${message.guild.id}\n**User Name:** ${message.author.username}#${message.author.discriminator}\n**User ID:** ${message.author.id}\n**Command:** \`${config.prefix}videomemes\``)
+               .setColor(colours.cmdbotlog)
+            botlogscmd.send(embed);
+            break;
+        case "utilities":
+            var embed = new Discord.RichEmbed()
+               .addField("🔧️ Help: Utilities","All commands use the prefix `jb!`\nIf there are any issues please join the support server [https://discord.gg/AWEvbyb](https://discord.gg/AWEvbyb)\nﾠ ﾠ")
+               .addField("💬 Commands (1)","**|** `weather` **|**")
+               .setColor(message.guild.me.displayColor)
+               .setFooter("JackBot | Developed by Cairo#4883", config.botownerpfp)
+            message.channel.send(embed);
+            var botlogscmd = bot.guilds.get(secrets.logserver).channels.get(secrets.logchannel);
+            var embed = new Discord.RichEmbed()
+               .setAuthor("Command Run Event")
+               .setThumbnail("https://emojipedia-us.s3.amazonaws.com/thumbs/120/twitter/141/incoming-envelope_1f4e8.png")
+               .setDescription(`**Guild Name:** ${message.guild.name}\n**Guild ID:** ${message.guild.id}\n**User Name:** ${message.author.username}#${message.author.discriminator}\n**User ID:** ${message.author.id}\n**Command:** \`${config.prefix}videomemes\``)
+               .setColor(colours.cmdbotlog)
+            botlogscmd.send(embed);
             break;
         case "ate":
             var embed = new Discord.RichEmbed()
                .addField("💿️ Help: Ate","All commands use the prefix `jb!`\nIf there are any issues please join the support server [https://discord.gg/AWEvbyb](https://discord.gg/AWEvbyb)\nﾠ ﾠ")
                .addField("📝 Note","**__These commands are for the BotOwner(s) only!__**\nﾠ ﾠ")
-               .addField("💬 Commands (4)","**|** `ate-ping` **|** `ate-check` **|** `ate-eval` **|** `ate-guilds` **|**")
+               .addField("💬 Commands (4)","**|** `ate-ping` **|** `ate-check` **|** `ate-eval` **|** `ate-guilds` **|**\n**|** `ate-restart` **|** `ate-stop` **|**")
                .setColor(message.guild.me.displayColor)
                .setFooter("JackBot | Developed by Cairo#4883", config.botownerpfp)
             message.channel.send(embed);
+            var botlogscmd = bot.guilds.get(secrets.logserver).channels.get(secrets.logchannel);
+            var embed = new Discord.RichEmbed()
+               .setAuthor("Command Run Event")
+               .setThumbnail("https://emojipedia-us.s3.amazonaws.com/thumbs/120/twitter/141/incoming-envelope_1f4e8.png")
+               .setDescription(`**Guild Name:** ${message.guild.name}\n**Guild ID:** ${message.guild.id}\n**User Name:** ${message.author.username}#${message.author.discriminator}\n**User ID:** ${message.author.id}\n**Command:** \`${config.prefix}ate\``)
+               .setColor(colours.cmdbotlog)
+            botlogscmd.send(embed);
             break;
 /////////////////////////////////////////////////////////////////////////////////////////////////
 //   ______   ______ _____ _____ __  __    ____ ___  __  __ __  __    _    _   _ ____  ____    //
@@ -214,6 +345,13 @@ bot.on("message", function(message){
                 .setDescription("<a:ping:449425545437118464> **I am decently quick with my responses, eh?**")
                 .setColor(0x25a1f9)
             message.channel.send(embed);
+            var botlogscmd = bot.guilds.get(secrets.logserver).channels.get(secrets.logchannel);
+            var embed = new Discord.RichEmbed()
+               .setAuthor("Command Run Event")
+               .setThumbnail("https://emojipedia-us.s3.amazonaws.com/thumbs/120/twitter/141/incoming-envelope_1f4e8.png")
+               .setDescription(`**Guild Name:** ${message.guild.name}\n**Guild ID:** ${message.guild.id}\n**User Name:** ${message.author.username}#${message.author.discriminator}\n**User ID:** ${message.author.id}\n**Command:** \`${config.prefix}ping\``)
+               .setColor(colours.cmdbotlog)
+            botlogscmd.send(embed);
             break;
         case "about": //alias for info
         case "info":
@@ -223,6 +361,13 @@ bot.on("message", function(message){
                .addField("💻 About Cairo (The Developer)","Cairo is a Discordian from South Island, New Zealand and codes basic bots.\nﾠ \n**Social Media:**\n<:skycade:437430012086583296> **Skycade:** [ID#3580](https://skycade.net/members/3580)\n<:twitter:437430284938641408> **Twitter:** [@CairoNZ](https://twitter.com/CairoNZ)\n<:discord:437503796730527745> **Discord:** Cairo#4883")
                .setColor(message.guild.me.displayColor)
             message.channel.send(embed);
+            var botlogscmd = bot.guilds.get(secrets.logserver).channels.get(secrets.logchannel);
+            var embed = new Discord.RichEmbed()
+               .setAuthor("Command Run Event")
+               .setThumbnail("https://emojipedia-us.s3.amazonaws.com/thumbs/120/twitter/141/incoming-envelope_1f4e8.png")
+               .setDescription(`**Guild Name:** ${message.guild.name}\n**Guild ID:** ${message.guild.id}\n**User Name:** ${message.author.username}#${message.author.discriminator}\n**User ID:** ${message.author.id}\n**Command:** \`${config.prefix}info\``)
+               .setColor(colours.cmdbotlog)
+            botlogscmd.send(embed);
             break;
         case "invite":
         case "support":
@@ -235,6 +380,13 @@ bot.on("message", function(message){
                 .setFooter("JackBot | Developed by Cairo#4883", config.botownerpfp)
                 .setColor(message.guild.me.displayColor)
             message.channel.send(embed);
+            var botlogscmd = bot.guilds.get(secrets.logserver).channels.get(secrets.logchannel);
+            var embed = new Discord.RichEmbed()
+               .setAuthor("Command Run Event")
+               .setThumbnail("https://emojipedia-us.s3.amazonaws.com/thumbs/120/twitter/141/incoming-envelope_1f4e8.png")
+               .setDescription(`**Guild Name:** ${message.guild.name}\n**Guild ID:** ${message.guild.id}\n**User Name:** ${message.author.username}#${message.author.discriminator}\n**User ID:** ${message.author.id}\n**Command:** \`${config.prefix}links\``)
+               .setColor(colours.cmdbotlog)
+            botlogscmd.send(embed);
             break;
         case "updatelogs":
         case "updatelog":
@@ -242,12 +394,26 @@ bot.on("message", function(message){
                 .setDescription("<:updates:449795724478119937> **You want to view the updatelogs you say?** - Click [here](https://cairo2k18.github.io/jackbot/updatelog).")
                 .setColor(0x3bcc58)
             message.channel.send(embed);
+            var botlogscmd = bot.guilds.get(secrets.logserver).channels.get(secrets.logchannel);
+            var embed = new Discord.RichEmbed()
+               .setAuthor("Command Run Event")
+               .setThumbnail("https://emojipedia-us.s3.amazonaws.com/thumbs/120/twitter/141/incoming-envelope_1f4e8.png")
+               .setDescription(`**Guild Name:** ${message.guild.name}\n**Guild ID:** ${message.guild.id}\n**User Name:** ${message.author.username}#${message.author.discriminator}\n**User ID:** ${message.author.id}\n**Command:** \`${config.prefix}updatelogs\``)
+               .setColor(colours.cmdbotlog)
+            botlogscmd.send(embed);
             break;
         case "version":
             var embed = new Discord.RichEmbed()
                 .setDescription("💿 Version " + config.version + " [STABLE]")
                 .setColor(message.guild.me.displayColor)
             message.channel.send(embed);
+            var botlogscmd = bot.guilds.get(secrets.logserver).channels.get(secrets.logchannel);
+            var embed = new Discord.RichEmbed()
+               .setAuthor("Command Run Event")
+               .setThumbnail("https://emojipedia-us.s3.amazonaws.com/thumbs/120/twitter/141/incoming-envelope_1f4e8.png")
+               .setDescription(`**Guild Name:** ${message.guild.name}\n**Guild ID:** ${message.guild.id}\n**User Name:** ${message.author.username}#${message.author.discriminator}\n**User ID:** ${message.author.id}\n**Command:** \`${config.prefix}version\``)
+               .setColor(colours.cmdbotlog)
+            botlogscmd.send(embed);
             break;
         case "bug": //alias for bugs
         case "bugs":
@@ -255,18 +421,39 @@ bot.on("message", function(message){
                 .setDescription("<:bugs:449430234287046676> **A bug you say?** - Please report all bugs [here](https://cairo2k18.github.io/jackbot/bugreport/).")
                 .setColor(0x3bcc58)
             message.channel.send(embed);
+            var botlogscmd = bot.guilds.get(secrets.logserver).channels.get(secrets.logchannel);
+            var embed = new Discord.RichEmbed()
+               .setAuthor("Command Run Event")
+               .setThumbnail("https://emojipedia-us.s3.amazonaws.com/thumbs/120/twitter/141/incoming-envelope_1f4e8.png")
+               .setDescription(`**Guild Name:** ${message.guild.name}\n**Guild ID:** ${message.guild.id}\n**User Name:** ${message.author.username}#${message.author.discriminator}\n**User ID:** ${message.author.id}\n**Command:** \`${config.prefix}bugss\``)
+               .setColor(colours.cmdbotlog)
+            botlogscmd.send(embed);
         break;
         case "github":
             var embed = new Discord.RichEmbed()
                .setDescription(":octopus: **I'm open source!** - View jackbot on github [here](https://github.com/cairo2k18/jackbot).")
                .setColor(0x9654f9)
             message.channel.send(embed);
+            var botlogscmd = bot.guilds.get(secrets.logserver).channels.get(secrets.logchannel);
+            var embed = new Discord.RichEmbed()
+               .setAuthor("Command Run Event")
+               .setThumbnail("https://emojipedia-us.s3.amazonaws.com/thumbs/120/twitter/141/incoming-envelope_1f4e8.png")
+               .setDescription(`**Guild Name:** ${message.guild.name}\n**Guild ID:** ${message.guild.id}\n**User Name:** ${message.author.username}#${message.author.discriminator}\n**User ID:** ${message.author.id}\n**Command:** \`${config.prefix}github\``)
+               .setColor(colours.cmdbotlog)
+            botlogscmd.send(embed);
             break;
         case "trello":
             var embed = new Discord.RichEmbed()
                .setDescription(":bulb: **Progress, Bugs, Ideas?** - You can view jackbot's trello [here](https://trello.com/b/vK3U4Qfy).")
                .setColor(0xf4d716)
             message.channel.send(embed);
+            var botlogscmd = bot.guilds.get(secrets.logserver).channels.get(secrets.logchannel);
+            var embed = new Discord.RichEmbed()
+               .setAuthor("Command Run Event")
+               .setThumbnail("https://emojipedia-us.s3.amazonaws.com/thumbs/120/twitter/141/incoming-envelope_1f4e8.png")
+               .setDescription(`**Guild Name:** ${message.guild.name}\n**Guild ID:** ${message.guild.id}\n**User Name:** ${message.author.username}#${message.author.discriminator}\n**User ID:** ${message.author.id}\n**Command:** \`${config.prefix}trello\``)
+               .setColor(colours.cmdbotlog)
+            botlogscmd.send(embed);
             break;
         case "patreon": //alias for donate
         case "donate":
@@ -274,7 +461,15 @@ bot.on("message", function(message){
                .setDescription(":heart: **Help support jackbot** - You can donate [here](https://www.patreon.com/jackbotofficial).")
                .setColor(0xb21313)
             message.channel.send(embed);
+            var botlogscmd = bot.guilds.get(secrets.logserver).channels.get(secrets.logchannel);
+            var embed = new Discord.RichEmbed()
+               .setAuthor("Command Run Event")
+               .setThumbnail("https://emojipedia-us.s3.amazonaws.com/thumbs/120/twitter/141/incoming-envelope_1f4e8.png")
+               .setDescription(`**Guild Name:** ${message.guild.name}\n**Guild ID:** ${message.guild.id}\n**User Name:** ${message.author.username}#${message.author.discriminator}\n**User ID:** ${message.author.id}\n**Command:** \`${config.prefix}donate\``)
+               .setColor(colours.cmdbotlog)
+            botlogscmd.send(embed);
             break; 
+        case "partners":
         case "partner":
         case "sweatychildren":
         case "sc":
@@ -283,7 +478,42 @@ bot.on("message", function(message){
                .setThumbnail("https://raw.githubusercontent.com/Cairo2k18/jackbot/images/newsclogo2018.jpg")
                .setColor(0x1400f7)
             message.channel.send(embed);
-            break; 
+            var botlogscmd = bot.guilds.get(secrets.logserver).channels.get(secrets.logchannel);
+            var embed = new Discord.RichEmbed()
+               .setAuthor("Command Run Event")
+               .setThumbnail("https://emojipedia-us.s3.amazonaws.com/thumbs/120/twitter/141/incoming-envelope_1f4e8.png")
+               .setDescription(`**Guild Name:** ${message.guild.name}\n**Guild ID:** ${message.guild.id}\n**User Name:** ${message.author.username}#${message.author.discriminator}\n**User ID:** ${message.author.id}\n**Command:** \`${config.prefix}partners\``)
+               .setColor(colours.cmdbotlog)
+            botlogscmd.send(embed);
+            break;
+        case "vote":
+            var embed = new Discord.RichEmbed()
+               .addField("👍 Vote",`**Discord Bots (DBL):** [JackBot's Listing](https://discordbots.org/bot/${bot.user.id}) | [Vote](https://discordbots.org/bot/${bot.user.id}/vote)\n**Listcord:** [JackBot's Listing](https://listcord.com/bot/${bot.user.id})\n`)
+               .setColor(message.guild.me.displayColor)
+            message.channel.send(embed);
+            var botlogscmd = bot.guilds.get(secrets.logserver).channels.get(secrets.logchannel);
+            var embed = new Discord.RichEmbed()
+               .setAuthor("Command Run Event")
+               .setThumbnail("https://emojipedia-us.s3.amazonaws.com/thumbs/120/twitter/141/incoming-envelope_1f4e8.png")
+               .setDescription(`**Guild Name:** ${message.guild.name}\n**Guild ID:** ${message.guild.id}\n**User Name:** ${message.author.username}#${message.author.discriminator}\n**User ID:** ${message.author.id}\n**Command:** \`${config.prefix}vote\``)
+               .setColor(colours.cmdbotlog)
+            botlogscmd.send(embed);
+            break;
+        case "listings":
+        case "lists": 
+        case "list":
+            var embed = new Discord.RichEmbed()
+               .addField("🤖 Bot Lists",`**Discord Bots (DBL):** [DBL Homepage](https://discordbots.org) | [JackBot's Listing](https://discordbots.org/bot/${bot.user.id})\n**Bots for Discord (BFD):** [BFD Homepage](https://botsfordiscord.com) | [JackBot's Listing](https://discordbots.org/bot/${bot.user.id})\n**Listcord:** [Listcord Homepage](https://listcord.com) | [JackBot's Listing](https://listcord.com/bot/${bot.user.id})\n`)
+               .setColor(message.guild.me.displayColor)
+            message.channel.send(embed);
+            var botlogscmd = bot.guilds.get(secrets.logserver).channels.get(secrets.logchannel);
+            var embed = new Discord.RichEmbed()
+               .setAuthor("Command Run Event")
+               .setThumbnail("https://emojipedia-us.s3.amazonaws.com/thumbs/120/twitter/141/incoming-envelope_1f4e8.png")
+               .setDescription(`**Guild Name:** ${message.guild.name}\n**Guild ID:** ${message.guild.id}\n**User Name:** ${message.author.username}#${message.author.discriminator}\n**User ID:** ${message.author.id}\n**Command:** \`${config.prefix}list\``)
+               .setColor(colours.cmdbotlog)
+            botlogscmd.send(embed);
+            break;
 //////////////////////////////////////////////////////////////////////////////////////
 //  __  __ _____ __  __ _____    ____ ___  __  __ __  __    _    _   _ ____  ____   //
 // |  \/  | ____|  \/  | ____|  / ___/ _ \|  \/  |  \/  |  / \  | \ | |  _ \/ ___|  //
@@ -298,6 +528,13 @@ bot.on("message", function(message){
                .setImage("https://i.imgur.com/S2GqmMz.jpg")
                .setColor(0x0800ff)
             message.channel.send(embed);
+            var botlogscmd = bot.guilds.get(secrets.logserver).channels.get(secrets.logchannel);
+            var embed = new Discord.RichEmbed()
+               .setAuthor("Command Run Event")
+               .setThumbnail("https://emojipedia-us.s3.amazonaws.com/thumbs/120/twitter/141/incoming-envelope_1f4e8.png")
+               .setDescription(`**Guild Name:** ${message.guild.name}\n**Guild ID:** ${message.guild.id}\n**User Name:** ${message.author.username}#${message.author.discriminator}\n**User ID:** ${message.author.id}\n**Command:** \`${config.prefix}junk\``)
+               .setColor(colours.cmdbotlog)
+            botlogscmd.send(embed);
             break;
         case "dump":
             var embed = new Discord.RichEmbed()
@@ -305,6 +542,13 @@ bot.on("message", function(message){
                .setImage("https://i.imgur.com/sD9qa1u.png")
                .setColor(0xa02121)
             message.channel.send(embed);
+            var botlogscmd = bot.guilds.get(secrets.logserver).channels.get(secrets.logchannel);
+            var embed = new Discord.RichEmbed()
+               .setAuthor("Command Run Event")
+               .setThumbnail("https://emojipedia-us.s3.amazonaws.com/thumbs/120/twitter/141/incoming-envelope_1f4e8.png")
+               .setDescription(`**Guild Name:** ${message.guild.name}\n**Guild ID:** ${message.guild.id}\n**User Name:** ${message.author.username}#${message.author.discriminator}\n**User ID:** ${message.author.id}\n**Command:** \`${config.prefix}dump\``)
+               .setColor(colours.cmdbotlog)
+            botlogscmd.send(embed);
             break;
         case "cleaver":
             var embed = new Discord.RichEmbed()
@@ -312,6 +556,13 @@ bot.on("message", function(message){
               .setImage("https://i.imgur.com/eWHj5pD.png")
               .setColor(0xc6baba)
             message.channel.send(embed);
+            var botlogscmd = bot.guilds.get(secrets.logserver).channels.get(secrets.logchannel);
+            var embed = new Discord.RichEmbed()
+               .setAuthor("Command Run Event")
+               .setThumbnail("https://emojipedia-us.s3.amazonaws.com/thumbs/120/twitter/141/incoming-envelope_1f4e8.png")
+               .setDescription(`**Guild Name:** ${message.guild.name}\n**Guild ID:** ${message.guild.id}\n**User Name:** ${message.author.username}#${message.author.discriminator}\n**User ID:** ${message.author.id}\n**Command:** \`${config.prefix}cleaver\``)
+               .setColor(colours.cmdbotlog)
+            botlogscmd.send(embed);
             break;
         case "dead":
             var embed = new Discord.RichEmbed()
@@ -319,6 +570,13 @@ bot.on("message", function(message){
                .setImage("https://i.imgur.com/1abxANB.png")
                .setColor(0xc90000)
             message.channel.send(embed);
+            var botlogscmd = bot.guilds.get(secrets.logserver).channels.get(secrets.logchannel);
+            var embed = new Discord.RichEmbed()
+               .setAuthor("Command Run Event")
+               .setThumbnail("https://emojipedia-us.s3.amazonaws.com/thumbs/120/twitter/141/incoming-envelope_1f4e8.png")
+               .setDescription(`**Guild Name:** ${message.guild.name}\n**Guild ID:** ${message.guild.id}\n**User Name:** ${message.author.username}#${message.author.discriminator}\n**User ID:** ${message.author.id}\n**Command:** \`${config.prefix}dead\``)
+               .setColor(colours.cmdbotlog)
+            botlogscmd.send(embed);
             break;
         case "gag":
             var embed = new Discord.RichEmbed()
@@ -326,6 +584,13 @@ bot.on("message", function(message){
                .setImage("https://i.imgur.com/Bh0Qc3M.png")
                .setColor(0xdd3e3e)
             message.channel.send(embed);
+            var botlogscmd = bot.guilds.get(secrets.logserver).channels.get(secrets.logchannel);
+            var embed = new Discord.RichEmbed()
+               .setAuthor("Command Run Event")
+               .setThumbnail("https://emojipedia-us.s3.amazonaws.com/thumbs/120/twitter/141/incoming-envelope_1f4e8.png")
+               .setDescription(`**Guild Name:** ${message.guild.name}\n**Guild ID:** ${message.guild.id}\n**User Name:** ${message.author.username}#${message.author.discriminator}\n**User ID:** ${message.author.id}\n**Command:** \`${config.prefix}gag\``)
+               .setColor(colours.cmdbotlog)
+            botlogscmd.send(embed);
             break;
         case "immature":
             var embed = new Discord.RichEmbed()
@@ -364,6 +629,13 @@ bot.on("message", function(message){
                .setImage("https://i.imgur.com/ojvetZs.png")
                .setColor(0x000001)
             message.channel.send(embed);
+            var botlogscmd = bot.guilds.get(secrets.logserver).channels.get(secrets.logchannel);
+            var embed = new Discord.RichEmbed()
+               .setAuthor("Command Run Event")
+               .setThumbnail("https://emojipedia-us.s3.amazonaws.com/thumbs/120/twitter/141/incoming-envelope_1f4e8.png")
+               .setDescription(`**Guild Name:** ${message.guild.name}\n**Guild ID:** ${message.guild.id}\n**User Name:** ${message.author.username}#${message.author.discriminator}\n**User ID:** ${message.author.id}\n**Command:** \`${config.prefix}immature\``)
+               .setColor(colours.cmdbotlog)
+            botlogscmd.send(embed);
             break;
         case "retard":
             var embed = new Discord.RichEmbed()
@@ -371,6 +643,13 @@ bot.on("message", function(message){
                .setImage("https://i.imgur.com/4eJZ3Tj.png")
                .setColor(0x0f51bc)
             message.channel.send(embed);
+            var botlogscmd = bot.guilds.get(secrets.logserver).channels.get(secrets.logchannel);
+            var embed = new Discord.RichEmbed()
+               .setAuthor("Command Run Event")
+               .setThumbnail("https://emojipedia-us.s3.amazonaws.com/thumbs/120/twitter/141/incoming-envelope_1f4e8.png")
+               .setDescription(`**Guild Name:** ${message.guild.name}\n**Guild ID:** ${message.guild.id}\n**User Name:** ${message.author.username}#${message.author.discriminator}\n**User ID:** ${message.author.id}\n**Command:** \`${config.prefix}retard\``)
+               .setColor(colours.cmdbotlog)
+            botlogscmd.send(embed);
             break;
         case "sticktotheformat":
             var embed = new Discord.RichEmbed()
@@ -378,6 +657,13 @@ bot.on("message", function(message){
                .setImage("https://media.tenor.com/images/accd85f9456ed6956001db4743cc7ca9/tenor.gif")
                .setColor(0xfff200)
             message.channel.send(embed);
+            var botlogscmd = bot.guilds.get(secrets.logserver).channels.get(secrets.logchannel);
+            var embed = new Discord.RichEmbed()
+               .setAuthor("Command Run Event")
+               .setThumbnail("https://emojipedia-us.s3.amazonaws.com/thumbs/120/twitter/141/incoming-envelope_1f4e8.png")
+               .setDescription(`**Guild Name:** ${message.guild.name}\n**Guild ID:** ${message.guild.id}\n**User Name:** ${message.author.username}#${message.author.discriminator}\n**User ID:** ${message.author.id}\n**Command:** \`${config.prefix}sticktotheformat\``)
+               .setColor(colours.cmdbotlog)
+            botlogscmd.send(embed);
             break;
         case "excited":
             var embed = new Discord.RichEmbed()
@@ -385,6 +671,13 @@ bot.on("message", function(message){
                .setImage("https://media.tenor.com/images/6236b6010241be14eb459a1ef364e92a/tenor.gif")
                .setColor(0xfffbaf)
             message.channel.send(embed);
+            var botlogscmd = bot.guilds.get(secrets.logserver).channels.get(secrets.logchannel);
+            var embed = new Discord.RichEmbed()
+               .setAuthor("Command Run Event")
+               .setThumbnail("https://emojipedia-us.s3.amazonaws.com/thumbs/120/twitter/141/incoming-envelope_1f4e8.png")
+               .setDescription(`**Guild Name:** ${message.guild.name}\n**Guild ID:** ${message.guild.id}\n**User Name:** ${message.author.username}#${message.author.discriminator}\n**User ID:** ${message.author.id}\n**Command:** \`${config.prefix}excited\``)
+               .setColor(colours.cmdbotlog)
+            botlogscmd.send(embed);
             break;
         case "levitate":
             var embed = new Discord.RichEmbed()
@@ -392,6 +685,13 @@ bot.on("message", function(message){
                .setImage("https://media.tenor.com/images/94ca3d978343e252d1e788f6baaf8014/tenor.gif")
                .setColor(0xc92a2a)
             message.channel.send(embed);
+            var botlogscmd = bot.guilds.get(secrets.logserver).channels.get(secrets.logchannel);
+            var embed = new Discord.RichEmbed()
+               .setAuthor("Command Run Event")
+               .setThumbnail("https://emojipedia-us.s3.amazonaws.com/thumbs/120/twitter/141/incoming-envelope_1f4e8.png")
+               .setDescription(`**Guild Name:** ${message.guild.name}\n**Guild ID:** ${message.guild.id}\n**User Name:** ${message.author.username}#${message.author.discriminator}\n**User ID:** ${message.author.id}\n**Command:** \`${config.prefix}levitate\``)
+               .setColor(colours.cmdbotlog)
+            botlogscmd.send(embed);
             break;
         case "joinskycade":
             var embed = new Discord.RichEmbed()
@@ -399,6 +699,13 @@ bot.on("message", function(message){
                .setImage("https://i.imgur.com/WN7NAc5.jpg")
                .setColor(0x847d7d)
             message.channel.send(embed);
+            var botlogscmd = bot.guilds.get(secrets.logserver).channels.get(secrets.logchannel);
+            var embed = new Discord.RichEmbed()
+               .setAuthor("Command Run Event")
+               .setThumbnail("https://emojipedia-us.s3.amazonaws.com/thumbs/120/twitter/141/incoming-envelope_1f4e8.png")
+               .setDescription(`**Guild Name:** ${message.guild.name}\n**Guild ID:** ${message.guild.id}\n**User Name:** ${message.author.username}#${message.author.discriminator}\n**User ID:** ${message.author.id}\n**Command:** \`${config.prefix}joinskycade\``)
+               .setColor(colours.cmdbotlog)
+            botlogscmd.send(embed);
             break;
         case "nani":
             var embed = new Discord.RichEmbed()
@@ -406,6 +713,13 @@ bot.on("message", function(message){
                .setImage("https://i.imgur.com/SVh18mF.png")
                .setColor(0xff0026)
             message.channel.send(embed);
+            var botlogscmd = bot.guilds.get(secrets.logserver).channels.get(secrets.logchannel);
+            var embed = new Discord.RichEmbed()
+               .setAuthor("Command Run Event")
+               .setThumbnail("https://emojipedia-us.s3.amazonaws.com/thumbs/120/twitter/141/incoming-envelope_1f4e8.png")
+               .setDescription(`**Guild Name:** ${message.guild.name}\n**Guild ID:** ${message.guild.id}\n**User Name:** ${message.author.username}#${message.author.discriminator}\n**User ID:** ${message.author.id}\n**Command:** \`${config.prefix}nani\``)
+               .setColor(colours.cmdbotlog)
+            botlogscmd.send(embed);
             break;
         case "defeated":
             var embed = new Discord.RichEmbed()
@@ -413,6 +727,13 @@ bot.on("message", function(message){
                .setImage("https://i.imgur.com/OV1nnBG.png")
                .setColor(0x494949)
             message.channel.send(embed);
+            var botlogscmd = bot.guilds.get(secrets.logserver).channels.get(secrets.logchannel);
+            var embed = new Discord.RichEmbed()
+               .setAuthor("Command Run Event")
+               .setThumbnail("https://emojipedia-us.s3.amazonaws.com/thumbs/120/twitter/141/incoming-envelope_1f4e8.png")
+               .setDescription(`**Guild Name:** ${message.guild.name}\n**Guild ID:** ${message.guild.id}\n**User Name:** ${message.author.username}#${message.author.discriminator}\n**User ID:** ${message.author.id}\n**Command:** \`${config.prefix}defeated\``)
+               .setColor(colours.cmdbotlog)
+            botlogscmd.send(embed);
             break;
         case "gtfo":
             var embed = new Discord.RichEmbed()
@@ -420,6 +741,13 @@ bot.on("message", function(message){
                .setImage("https://i.imgur.com/opbqXDI.png")
                .setColor(0x3c598c)
             message.channel.send(embed);
+            var botlogscmd = bot.guilds.get(secrets.logserver).channels.get(secrets.logchannel);
+            var embed = new Discord.RichEmbed()
+               .setAuthor("Command Run Event")
+               .setThumbnail("https://emojipedia-us.s3.amazonaws.com/thumbs/120/twitter/141/incoming-envelope_1f4e8.png")
+               .setDescription(`**Guild Name:** ${message.guild.name}\n**Guild ID:** ${message.guild.id}\n**User Name:** ${message.author.username}#${message.author.discriminator}\n**User ID:** ${message.author.id}\n**Command:** \`${config.prefix}gtfo\``)
+               .setColor(colours.cmdbotlog)
+            botlogscmd.send(embed);
             break;
         case "kazoodrop":
             var embed = new Discord.RichEmbed()
@@ -427,6 +755,13 @@ bot.on("message", function(message){
                 .setImage("https://i.imgur.com/66CKPTu.png")
                 .setColor(0xedb50e)
             message.channel.send(embed);
+            var botlogscmd = bot.guilds.get(secrets.logserver).channels.get(secrets.logchannel);
+            var embed = new Discord.RichEmbed()
+               .setAuthor("Command Run Event")
+               .setThumbnail("https://emojipedia-us.s3.amazonaws.com/thumbs/120/twitter/141/incoming-envelope_1f4e8.png")
+               .setDescription(`**Guild Name:** ${message.guild.name}\n**Guild ID:** ${message.guild.id}\n**User Name:** ${message.author.username}#${message.author.discriminator}\n**User ID:** ${message.author.id}\n**Command:** \`${config.prefix}kazoodrop\``)
+               .setColor(colours.cmdbotlog)
+            botlogscmd.send(embed);
             break;
         case "smh":
             var embed = new Discord.RichEmbed()
@@ -434,6 +769,13 @@ bot.on("message", function(message){
                 .setImage("https://i.imgur.com/9x74MMI.jpg")
                 .setColor(0xf7b8a5)
             message.channel.send(embed);
+            var botlogscmd = bot.guilds.get(secrets.logserver).channels.get(secrets.logchannel);
+            var embed = new Discord.RichEmbed()
+               .setAuthor("Command Run Event")
+               .setThumbnail("https://emojipedia-us.s3.amazonaws.com/thumbs/120/twitter/141/incoming-envelope_1f4e8.png")
+               .setDescription(`**Guild Name:** ${message.guild.name}\n**Guild ID:** ${message.guild.id}\n**User Name:** ${message.author.username}#${message.author.discriminator}\n**User ID:** ${message.author.id}\n**Command:** \`${config.prefix}smh\``)
+               .setColor(colours.cmdbotlog)
+            botlogscmd.send(embed);
             break;
         case "crotch":
             var embed = new Discord.RichEmbed()
@@ -441,6 +783,13 @@ bot.on("message", function(message){
                 .setImage("https://i.imgur.com/fYwoVAg.png")
                 .setColor(0x425791)
             message.channel.send(embed);
+            var botlogscmd = bot.guilds.get(secrets.logserver).channels.get(secrets.logchannel);
+            var embed = new Discord.RichEmbed()
+               .setAuthor("Command Run Event")
+               .setThumbnail("https://emojipedia-us.s3.amazonaws.com/thumbs/120/twitter/141/incoming-envelope_1f4e8.png")
+               .setDescription(`**Guild Name:** ${message.guild.name}\n**Guild ID:** ${message.guild.id}\n**User Name:** ${message.author.username}#${message.author.discriminator}\n**User ID:** ${message.author.id}\n**Command:** \`${config.prefix}crotch\``)
+               .setColor(colours.cmdbotlog)
+            botlogscmd.send(embed);
             break;
         case "murderer":
             var embed = new Discord.RichEmbed()
@@ -448,6 +797,13 @@ bot.on("message", function(message){
                 .setImage("https://i.imgur.com/X1qQjJS.png")
                 .setColor(0xf9f9c2)
             message.channel.send(embed);
+            var botlogscmd = bot.guilds.get(secrets.logserver).channels.get(secrets.logchannel);
+            var embed = new Discord.RichEmbed()
+               .setAuthor("Command Run Event")
+               .setThumbnail("https://emojipedia-us.s3.amazonaws.com/thumbs/120/twitter/141/incoming-envelope_1f4e8.png")
+               .setDescription(`**Guild Name:** ${message.guild.name}\n**Guild ID:** ${message.guild.id}\n**User Name:** ${message.author.username}#${message.author.discriminator}\n**User ID:** ${message.author.id}\n**Command:** \`${config.prefix}murderer\``)
+               .setColor(colours.cmdbotlog)
+            botlogscmd.send(embed);
             break;
         case "psychopath":
             var embed = new Discord.RichEmbed()
@@ -456,6 +812,13 @@ bot.on("message", function(message){
                 .setFooter("From video https://youtu.be/lV7S4unkJNs", config.ytlogo)
                 .setColor(0xff2323)
             message.channel.send(embed);
+            var botlogscmd = bot.guilds.get(secrets.logserver).channels.get(secrets.logchannel);
+            var embed = new Discord.RichEmbed()
+               .setAuthor("Command Run Event")
+               .setThumbnail("https://emojipedia-us.s3.amazonaws.com/thumbs/120/twitter/141/incoming-envelope_1f4e8.png")
+               .setDescription(`**Guild Name:** ${message.guild.name}\n**Guild ID:** ${message.guild.id}\n**User Name:** ${message.author.username}#${message.author.discriminator}\n**User ID:** ${message.author.id}\n**Command:** \`${config.prefix}psychopath\``)
+               .setColor(colours.cmdbotlog)
+            botlogscmd.send(embed);
             break;
         case "weird":
             var embed = new Discord.RichEmbed()
@@ -464,6 +827,13 @@ bot.on("message", function(message){
                 .setFooter("From video https://youtu.be/lV7S4unkJNs", config.ytlogo)
                 .setColor(0x7f68ff)
             message.channel.send(embed);
+            var botlogscmd = bot.guilds.get(secrets.logserver).channels.get(secrets.logchannel);
+            var embed = new Discord.RichEmbed()
+               .setAuthor("Command Run Event")
+               .setThumbnail("https://emojipedia-us.s3.amazonaws.com/thumbs/120/twitter/141/incoming-envelope_1f4e8.png")
+               .setDescription(`**Guild Name:** ${message.guild.name}\n**Guild ID:** ${message.guild.id}\n**User Name:** ${message.author.username}#${message.author.discriminator}\n**User ID:** ${message.author.id}\n**Command:** \`${config.prefix}weird\``)
+               .setColor(colours.cmdbotlog)
+            botlogscmd.send(embed);
             break;
         case "alien":
             var embed = new Discord.RichEmbed()
@@ -472,6 +842,13 @@ bot.on("message", function(message){
                 .setFooter("From video https://youtu.be/lV7S4unkJNs", config.ytlogo)
                 .setColor(0xffeca8)
             message.channel.send(embed);
+            var botlogscmd = bot.guilds.get(secrets.logserver).channels.get(secrets.logchannel);
+            var embed = new Discord.RichEmbed()
+               .setAuthor("Command Run Event")
+               .setThumbnail("https://emojipedia-us.s3.amazonaws.com/thumbs/120/twitter/141/incoming-envelope_1f4e8.png")
+               .setDescription(`**Guild Name:** ${message.guild.name}\n**Guild ID:** ${message.guild.id}\n**User Name:** ${message.author.username}#${message.author.discriminator}\n**User ID:** ${message.author.id}\n**Command:** \`${config.prefix}alien\``)
+               .setColor(colours.cmdbotlog)
+            botlogscmd.send(embed);
             break;
         case "shocked":
             var embed = new Discord.RichEmbed()
@@ -479,6 +856,13 @@ bot.on("message", function(message){
                 .setImage("https://cdn.glitch.com/65a0949d-1f15-45db-bc6f-d9470dc2046a%2Fshocked.png?1529911108859")
                 .setFooter("From video https://youtu.be/lV7S4unkJNs", config.ytlogo)
             message.channel.send(embed);
+            var botlogscmd = bot.guilds.get(secrets.logserver).channels.get(secrets.logchannel);
+            var embed = new Discord.RichEmbed()
+               .setAuthor("Command Run Event")
+               .setThumbnail("https://emojipedia-us.s3.amazonaws.com/thumbs/120/twitter/141/incoming-envelope_1f4e8.png")
+               .setDescription(`**Guild Name:** ${message.guild.name}\n**Guild ID:** ${message.guild.id}\n**User Name:** ${message.author.username}#${message.author.discriminator}\n**User ID:** ${message.author.id}\n**Command:** \`${config.prefix}shocked\``)
+               .setColor(colours.cmdbotlog)
+            botlogscmd.send(embed);
             break;
         case "uhh":
             var embed = new Discord.RichEmbed()
@@ -487,6 +871,13 @@ bot.on("message", function(message){
                 .setColor(0xfffffa)
                 .setFooter("From video https://youtu.be/lV7S4unkJNs", config.ytlogo)
             message.channel.send(embed);
+            var botlogscmd = bot.guilds.get(secrets.logserver).channels.get(secrets.logchannel);
+            var embed = new Discord.RichEmbed()
+               .setAuthor("Command Run Event")
+               .setThumbnail("https://emojipedia-us.s3.amazonaws.com/thumbs/120/twitter/141/incoming-envelope_1f4e8.png")
+               .setDescription(`**Guild Name:** ${message.guild.name}\n**Guild ID:** ${message.guild.id}\n**User Name:** ${message.author.username}#${message.author.discriminator}\n**User ID:** ${message.author.id}\n**Command:** \`${config.prefix}uhh\``)
+               .setColor(colours.cmdbotlog)
+            botlogscmd.send(embed);
             break;
        case "wtf":
             var embed = new Discord.RichEmbed()
@@ -495,6 +886,13 @@ bot.on("message", function(message){
                .setColor(0x2a8bd6)
                .setFooter("From video https://youtu.be/snhzjJmp0E0", config.ytlogo)
             message.channel.send(embed);
+            var botlogscmd = bot.guilds.get(secrets.logserver).channels.get(secrets.logchannel);
+            var embed = new Discord.RichEmbed()
+               .setAuthor("Command Run Event")
+               .setThumbnail("https://emojipedia-us.s3.amazonaws.com/thumbs/120/twitter/141/incoming-envelope_1f4e8.png")
+               .setDescription(`**Guild Name:** ${message.guild.name}\n**Guild ID:** ${message.guild.id}\n**User Name:** ${message.author.username}#${message.author.discriminator}\n**User ID:** ${message.author.id}\n**Command:** \`${config.prefix}wtf\``)
+               .setColor(colours.cmdbotlog)
+            botlogscmd.send(embed);
             break;
         case "singing":
             var embed = new Discord.RichEmbed()
@@ -503,6 +901,13 @@ bot.on("message", function(message){
                .setColor(0xcccccc)
                .setFooter("From video https://youtu.be/snhzjJmp0E0", config.ytlogo)
             message.channel.send(embed);
+            var botlogscmd = bot.guilds.get(secrets.logserver).channels.get(secrets.logchannel);
+            var embed = new Discord.RichEmbed()
+               .setAuthor("Command Run Event")
+               .setThumbnail("https://emojipedia-us.s3.amazonaws.com/thumbs/120/twitter/141/incoming-envelope_1f4e8.png")
+               .setDescription(`**Guild Name:** ${message.guild.name}\n**Guild ID:** ${message.guild.id}\n**User Name:** ${message.author.username}#${message.author.discriminator}\n**User ID:** ${message.author.id}\n**Command:** \`${config.prefix}singing\``)
+               .setColor(colours.cmdbotlog)
+            botlogscmd.send(embed);
             break;
         case "suited":
             var embed = new Discord.RichEmbed()
@@ -511,6 +916,13 @@ bot.on("message", function(message){
                .setColor(0xffcc00)
                .setFooter("From video https://youtu.be/snhzjJmp0E0", config.ytlogo)
             message.channel.send(embed);
+            var botlogscmd = bot.guilds.get(secrets.logserver).channels.get(secrets.logchannel);
+            var embed = new Discord.RichEmbed()
+               .setAuthor("Command Run Event")
+               .setThumbnail("https://emojipedia-us.s3.amazonaws.com/thumbs/120/twitter/141/incoming-envelope_1f4e8.png")
+               .setDescription(`**Guild Name:** ${message.guild.name}\n**Guild ID:** ${message.guild.id}\n**User Name:** ${message.author.username}#${message.author.discriminator}\n**User ID:** ${message.author.id}\n**Command:** \`${config.prefix}suited\``)
+               .setColor(colours.cmdbotlog)
+            botlogscmd.send(embed);
             break;
         case "please":
             var embed = new Discord.RichEmbed()
@@ -519,6 +931,13 @@ bot.on("message", function(message){
                .setColor(0xff0037)
                .setFooter("From video https://youtu.be/snhzjJmp0E0", config.ytlogo)
             message.channel.send(embed);
+            var botlogscmd = bot.guilds.get(secrets.logserver).channels.get(secrets.logchannel);
+            var embed = new Discord.RichEmbed()
+               .setAuthor("Command Run Event")
+               .setThumbnail("https://emojipedia-us.s3.amazonaws.com/thumbs/120/twitter/141/incoming-envelope_1f4e8.png")
+               .setDescription(`**Guild Name:** ${message.guild.name}\n**Guild ID:** ${message.guild.id}\n**User Name:** ${message.author.username}#${message.author.discriminator}\n**User ID:** ${message.author.id}\n**Command:** \`${config.prefix}please\``)
+               .setColor(colours.cmdbotlog)
+            botlogscmd.send(embed);
             break;
         case "idiot":
             var embed = new Discord.RichEmbed()
@@ -527,6 +946,13 @@ bot.on("message", function(message){
                .setColor(0xff8eac)
                .setFooter("From video https://youtu.be/4kgTRbJY9zk", config.ytlogo)
             message.channel.send(embed);
+            var botlogscmd = bot.guilds.get(secrets.logserver).channels.get(secrets.logchannel);
+            var embed = new Discord.RichEmbed()
+               .setAuthor("Command Run Event")
+               .setThumbnail("https://emojipedia-us.s3.amazonaws.com/thumbs/120/twitter/141/incoming-envelope_1f4e8.png")
+               .setDescription(`**Guild Name:** ${message.guild.name}\n**Guild ID:** ${message.guild.id}\n**User Name:** ${message.author.username}#${message.author.discriminator}\n**User ID:** ${message.author.id}\n**Command:** \`${config.prefix}idiot\``)
+               .setColor(colours.cmdbotlog)
+            botlogscmd.send(embed);
             break;
         case "angry":
             var embed = new Discord.RichEmbed()
@@ -535,6 +961,13 @@ bot.on("message", function(message){
                .setImage("https://i.imgur.com/lPIOloc.png")
                .setFooter("From video https://youtu.be/8SzMcGsyzoM", config.ytlogo)
             message.channel.send(embed);
+            var botlogscmd = bot.guilds.get(secrets.logserver).channels.get(secrets.logchannel);
+            var embed = new Discord.RichEmbed()
+               .setAuthor("Command Run Event")
+               .setThumbnail("https://emojipedia-us.s3.amazonaws.com/thumbs/120/twitter/141/incoming-envelope_1f4e8.png")
+               .setDescription(`**Guild Name:** ${message.guild.name}\n**Guild ID:** ${message.guild.id}\n**User Name:** ${message.author.username}#${message.author.discriminator}\n**User ID:** ${message.author.id}\n**Command:** \`${config.prefix}angry\``)
+               .setColor(colours.cmdbotlog)
+            botlogscmd.send(embed);
             break;
         case "angelic":
             var embed = new Discord.RichEmbed()
@@ -543,6 +976,13 @@ bot.on("message", function(message){
                .setImage("https://i.imgur.com/l2yFRqI.png")
                .setFooter("From video https://youtu.be/8SzMcGsyzoM", config.ytlogo)
             message.channel.send(embed);
+            var botlogscmd = bot.guilds.get(secrets.logserver).channels.get(secrets.logchannel);
+            var embed = new Discord.RichEmbed()
+               .setAuthor("Command Run Event")
+               .setThumbnail("https://emojipedia-us.s3.amazonaws.com/thumbs/120/twitter/141/incoming-envelope_1f4e8.png")
+               .setDescription(`**Guild Name:** ${message.guild.name}\n**Guild ID:** ${message.guild.id}\n**User Name:** ${message.author.username}#${message.author.discriminator}\n**User ID:** ${message.author.id}\n**Command:** \`${config.prefix}angelic\``)
+               .setColor(colours.cmdbotlog)
+            botlogscmd.send(embed);
             break;
         case "kazooholder":
             var embed = new Discord.RichEmbed()
@@ -551,6 +991,13 @@ bot.on("message", function(message){
                .setImage("https://i.imgur.com/BATqcsf.png")
                .setFooter("From video https://youtu.be/8SzMcGsyzoM", config.ytlogo)
             message.channel.send(embed);
+            var botlogscmd = bot.guilds.get(secrets.logserver).channels.get(secrets.logchannel);
+            var embed = new Discord.RichEmbed()
+               .setAuthor("Command Run Event")
+               .setThumbnail("https://emojipedia-us.s3.amazonaws.com/thumbs/120/twitter/141/incoming-envelope_1f4e8.png")
+               .setDescription(`**Guild Name:** ${message.guild.name}\n**Guild ID:** ${message.guild.id}\n**User Name:** ${message.author.username}#${message.author.discriminator}\n**User ID:** ${message.author.id}\n**Command:** \`${config.prefix}kazooholder\``)
+               .setColor(colours.cmdbotlog)
+            botlogscmd.send(embed);
             break;
         case "flamin":
             var embed = new Discord.RichEmbed()
@@ -559,6 +1006,13 @@ bot.on("message", function(message){
                .setImage("https://i.imgur.com/HTdHFlV.jpg")
                .setFooter("From video https://youtu.be/mvCK7f2xk0Q", config.ytlogo)
             message.channel.send(embed);
+            var botlogscmd = bot.guilds.get(secrets.logserver).channels.get(secrets.logchannel);
+            var embed = new Discord.RichEmbed()
+               .setAuthor("Command Run Event")
+               .setThumbnail("https://emojipedia-us.s3.amazonaws.com/thumbs/120/twitter/141/incoming-envelope_1f4e8.png")
+               .setDescription(`**Guild Name:** ${message.guild.name}\n**Guild ID:** ${message.guild.id}\n**User Name:** ${message.author.username}#${message.author.discriminator}\n**User ID:** ${message.author.id}\n**Command:** \`${config.prefix}flamin\``)
+               .setColor(colours.cmdbotlog)
+            botlogscmd.send(embed);
             break;
         case "satan":
             var embed = new Discord.RichEmbed()
@@ -567,6 +1021,13 @@ bot.on("message", function(message){
                .setImage("https://i.imgur.com/2sDTv8A.png")
                .setFooter("From video https://youtu.be/mvCK7f2xk0Q", config.ytlogo)
             message.channel.send(embed);
+            var botlogscmd = bot.guilds.get(secrets.logserver).channels.get(secrets.logchannel);
+            var embed = new Discord.RichEmbed()
+               .setAuthor("Command Run Event")
+               .setThumbnail("https://emojipedia-us.s3.amazonaws.com/thumbs/120/twitter/141/incoming-envelope_1f4e8.png")
+               .setDescription(`**Guild Name:** ${message.guild.name}\n**Guild ID:** ${message.guild.id}\n**User Name:** ${message.author.username}#${message.author.discriminator}\n**User ID:** ${message.author.id}\n**Command:** \`${config.prefix}satan\``)
+               .setColor(colours.cmdbotlog)
+            botlogscmd.send(embed);
             break;
         case "thinking":
             var embed = new Discord.RichEmbed()
@@ -575,6 +1036,13 @@ bot.on("message", function(message){
                .setImage("https://i.imgur.com/ssiOEJo.png")
                .setFooter("From video https://youtu.be/mvCK7f2xk0Q", config.ytlogo)
             message.channel.send(embed);
+            var botlogscmd = bot.guilds.get(secrets.logserver).channels.get(secrets.logchannel);
+            var embed = new Discord.RichEmbed()
+               .setAuthor("Command Run Event")
+               .setThumbnail("https://emojipedia-us.s3.amazonaws.com/thumbs/120/twitter/141/incoming-envelope_1f4e8.png")
+               .setDescription(`**Guild Name:** ${message.guild.name}\n**Guild ID:** ${message.guild.id}\n**User Name:** ${message.author.username}#${message.author.discriminator}\n**User ID:** ${message.author.id}\n**Command:** \`${config.prefix}thinking\``)
+               .setColor(colours.cmdbotlog)
+            botlogscmd.send(embed);
             break;
         case "swirl":
             var embed = new Discord.RichEmbed()
@@ -583,6 +1051,13 @@ bot.on("message", function(message){
                .setColor(0xffd989)
                .setFooter("From video https://youtu.be/-BSiPJujYIY", config.ytlogo)
             message.channel.send(embed);
+            var botlogscmd = bot.guilds.get(secrets.logserver).channels.get(secrets.logchannel);
+            var embed = new Discord.RichEmbed()
+               .setAuthor("Command Run Event")
+               .setThumbnail("https://emojipedia-us.s3.amazonaws.com/thumbs/120/twitter/141/incoming-envelope_1f4e8.png")
+               .setDescription(`**Guild Name:** ${message.guild.name}\n**Guild ID:** ${message.guild.id}\n**User Name:** ${message.author.username}#${message.author.discriminator}\n**User ID:** ${message.author.id}\n**Command:** \`${config.prefix}swirl\``)
+               .setColor(colours.cmdbotlog)
+            botlogscmd.send(embed);
             break;
         case "overnight":
             var embed = new Discord.RichEmbed()
@@ -591,6 +1066,13 @@ bot.on("message", function(message){
                .setColor(0x5ae4fc)
                .setFooter("From video https://youtu.be/fqlZW4XDQiI", config.ytlogo)
             message.channel.send(embed);
+            var botlogscmd = bot.guilds.get(secrets.logserver).channels.get(secrets.logchannel);
+            var embed = new Discord.RichEmbed()
+               .setAuthor("Command Run Event")
+               .setThumbnail("https://emojipedia-us.s3.amazonaws.com/thumbs/120/twitter/141/incoming-envelope_1f4e8.png")
+               .setDescription(`**Guild Name:** ${message.guild.name}\n**Guild ID:** ${message.guild.id}\n**User Name:** ${message.author.username}#${message.author.discriminator}\n**User ID:** ${message.author.id}\n**Command:** \`${config.prefix}overnight\``)
+               .setColor(colours.cmdbotlog)
+            botlogscmd.send(embed);
             break;
         case "kazoo":
             var embed = new Discord.RichEmbed()
@@ -599,6 +1081,13 @@ bot.on("message", function(message){
                .setColor(0xfffa00)
                .setFooter("From video https://youtu.be/y8ONmh_G-cQ", config.ytlogo)
             message.channel.send(embed);
+            var botlogscmd = bot.guilds.get(secrets.logserver).channels.get(secrets.logchannel);
+            var embed = new Discord.RichEmbed()
+               .setAuthor("Command Run Event")
+               .setThumbnail("https://emojipedia-us.s3.amazonaws.com/thumbs/120/twitter/141/incoming-envelope_1f4e8.png")
+               .setDescription(`**Guild Name:** ${message.guild.name}\n**Guild ID:** ${message.guild.id}\n**User Name:** ${message.author.username}#${message.author.discriminator}\n**User ID:** ${message.author.id}\n**Command:** \`${config.prefix}kazoo\``)
+               .setColor(colours.cmdbotlog)
+            botlogscmd.send(embed);
             break;
         case "explosion":
             var embed = new Discord.RichEmbed()
@@ -607,6 +1096,13 @@ bot.on("message", function(message){
                .setColor(0xff3f00)
                .setFooter("From video https://youtu.be/y8ONmh_G-cQ", config.ytlogo)
             message.channel.send(embed);
+            var botlogscmd = bot.guilds.get(secrets.logserver).channels.get(secrets.logchannel);
+            var embed = new Discord.RichEmbed()
+               .setAuthor("Command Run Event")
+               .setThumbnail("https://emojipedia-us.s3.amazonaws.com/thumbs/120/twitter/141/incoming-envelope_1f4e8.png")
+               .setDescription(`**Guild Name:** ${message.guild.name}\n**Guild ID:** ${message.guild.id}\n**User Name:** ${message.author.username}#${message.author.discriminator}\n**User ID:** ${message.author.id}\n**Command:** \`${config.prefix}explosion\``)
+               .setColor(colours.cmdbotlog)
+            botlogscmd.send(embed);
             break;
         case "derp":
             var embed = new Discord.RichEmbed()
@@ -615,6 +1111,13 @@ bot.on("message", function(message){
                .setColor(0xc66225)
                .setFooter("From video https://youtu.be/b9eqxonESeo", config.ytlogo)
             message.channel.send(embed);
+            var botlogscmd = bot.guilds.get(secrets.logserver).channels.get(secrets.logchannel);
+            var embed = new Discord.RichEmbed()
+               .setAuthor("Command Run Event")
+               .setThumbnail("https://emojipedia-us.s3.amazonaws.com/thumbs/120/twitter/141/incoming-envelope_1f4e8.png")
+               .setDescription(`**Guild Name:** ${message.guild.name}\n**Guild ID:** ${message.guild.id}\n**User Name:** ${message.author.username}#${message.author.discriminator}\n**User ID:** ${message.author.id}\n**Command:** \`${config.prefix}derp\``)
+               .setColor(colours.cmdbotlog)
+            botlogscmd.send(embed);
             break;
         case "twitterllama":
             var embed = new Discord.RichEmbed()
@@ -623,6 +1126,13 @@ bot.on("message", function(message){
                .setColor(0x969696)
                .setFooter("By u/xXMLG_R3dd1t3rXx", config.rlogo)
             message.channel.send(embed);
+            var botlogscmd = bot.guilds.get(secrets.logserver).channels.get(secrets.logchannel);
+            var embed = new Discord.RichEmbed()
+               .setAuthor("Command Run Event")
+               .setThumbnail("https://emojipedia-us.s3.amazonaws.com/thumbs/120/twitter/141/incoming-envelope_1f4e8.png")
+               .setDescription(`**Guild Name:** ${message.guild.name}\n**Guild ID:** ${message.guild.id}\n**User Name:** ${message.author.username}#${message.author.discriminator}\n**User ID:** ${message.author.id}\n**Command:** \`${config.prefix}twitterllama\``)
+               .setColor(colours.cmdbotlog)
+            botlogscmd.send(embed);
             break;
         case "monster":
             var embed = new Discord.RichEmbed()
@@ -631,6 +1141,13 @@ bot.on("message", function(message){
                .setColor(0x9654f9)
                .setFooter("From video https://youtu.be/POX_wH8nM5o", config.ytlogo)
             message.channel.send(embed);
+            var botlogscmd = bot.guilds.get(secrets.logserver).channels.get(secrets.logchannel);
+            var embed = new Discord.RichEmbed()
+               .setAuthor("Command Run Event")
+               .setThumbnail("https://emojipedia-us.s3.amazonaws.com/thumbs/120/twitter/141/incoming-envelope_1f4e8.png")
+               .setDescription(`**Guild Name:** ${message.guild.name}\n**Guild ID:** ${message.guild.id}\n**User Name:** ${message.author.username}#${message.author.discriminator}\n**User ID:** ${message.author.id}\n**Command:** \`${config.prefix}monster\``)
+               .setColor(colours.cmdbotlog)
+            botlogscmd.send(embed);
             break;
         case "duet":
             var embed = new Discord.RichEmbed()
@@ -639,6 +1156,13 @@ bot.on("message", function(message){
                .setColor(0xffeec9)
                .setFooter("From video https://youtu.be/POX_wH8nM5o", config.ytlogo)
             message.channel.send(embed);
+            var botlogscmd = bot.guilds.get(secrets.logserver).channels.get(secrets.logchannel);
+            var embed = new Discord.RichEmbed()
+               .setAuthor("Command Run Event")
+               .setThumbnail("https://emojipedia-us.s3.amazonaws.com/thumbs/120/twitter/141/incoming-envelope_1f4e8.png")
+               .setDescription(`**Guild Name:** ${message.guild.name}\n**Guild ID:** ${message.guild.id}\n**User Name:** ${message.author.username}#${message.author.discriminator}\n**User ID:** ${message.author.id}\n**Command:** \`${config.prefix}duet\``)
+               .setColor(colours.cmdbotlog)
+            botlogscmd.send(embed);
             break;
         case "broke":
             var embed = new Discord.RichEmbed()
@@ -647,6 +1171,13 @@ bot.on("message", function(message){
                .setColor(0xffdddd)
                .setFooter("From video https://youtu.be/POX_wH8nM5o", config.ytlogo)
             message.channel.send(embed);
+            var botlogscmd = bot.guilds.get(secrets.logserver).channels.get(secrets.logchannel);
+            var embed = new Discord.RichEmbed()
+               .setAuthor("Command Run Event")
+               .setThumbnail("https://emojipedia-us.s3.amazonaws.com/thumbs/120/twitter/141/incoming-envelope_1f4e8.png")
+               .setDescription(`**Guild Name:** ${message.guild.name}\n**Guild ID:** ${message.guild.id}\n**User Name:** ${message.author.username}#${message.author.discriminator}\n**User ID:** ${message.author.id}\n**Command:** \`${config.prefix}broke\``)
+               .setColor(colours.cmdbotlog)
+            botlogscmd.send(embed);
             break;
         case "paidpromotion":
             var embed = new Discord.RichEmbed()
@@ -655,6 +1186,13 @@ bot.on("message", function(message){
                .setColor(0x5cd330)
                .setFooter("From video https://youtu.be/ViA1s0_FJPc", config.ytlogo)
             message.channel.send(embed);
+            var botlogscmd = bot.guilds.get(secrets.logserver).channels.get(secrets.logchannel);
+            var embed = new Discord.RichEmbed()
+               .setAuthor("Command Run Event")
+               .setThumbnail("https://emojipedia-us.s3.amazonaws.com/thumbs/120/twitter/141/incoming-envelope_1f4e8.png")
+               .setDescription(`**Guild Name:** ${message.guild.name}\n**Guild ID:** ${message.guild.id}\n**User Name:** ${message.author.username}#${message.author.discriminator}\n**User ID:** ${message.author.id}\n**Command:** \`${config.prefix}paidpromotion\``)
+               .setColor(colours.cmdbotlog)
+            botlogscmd.send(embed);
             break;
         case "nose":
             var embed = new Discord.RichEmbed()
@@ -663,6 +1201,13 @@ bot.on("message", function(message){
                .setColor(0xffe0e0)
                .setFooter("From video https://youtu.be/99N69wwBXK0", config.ytlogo)
             message.channel.send(embed);
+            var botlogscmd = bot.guilds.get(secrets.logserver).channels.get(secrets.logchannel);
+            var embed = new Discord.RichEmbed()
+               .setAuthor("Command Run Event")
+               .setThumbnail("https://emojipedia-us.s3.amazonaws.com/thumbs/120/twitter/141/incoming-envelope_1f4e8.png")
+               .setDescription(`**Guild Name:** ${message.guild.name}\n**Guild ID:** ${message.guild.id}\n**User Name:** ${message.author.username}#${message.author.discriminator}\n**User ID:** ${message.author.id}\n**Command:** \`${config.prefix}nose\``)
+               .setColor(colours.cmdbotlog)
+            botlogscmd.send(embed);
             break;
         case "bloodyhell":
             var embed = new Discord.RichEmbed()
@@ -671,6 +1216,13 @@ bot.on("message", function(message){
                .setColor(0xb7a8a8)
                .setFooter("From video https://youtu.be/99N69wwBXK0", config.ytlogo)
             message.channel.send(embed);
+            var botlogscmd = bot.guilds.get(secrets.logserver).channels.get(secrets.logchannel);
+            var embed = new Discord.RichEmbed()
+               .setAuthor("Command Run Event")
+               .setThumbnail("https://emojipedia-us.s3.amazonaws.com/thumbs/120/twitter/141/incoming-envelope_1f4e8.png")
+               .setDescription(`**Guild Name:** ${message.guild.name}\n**Guild ID:** ${message.guild.id}\n**User Name:** ${message.author.username}#${message.author.discriminator}\n**User ID:** ${message.author.id}\n**Command:** \`${config.prefix}bloodyhell\``)
+               .setColor(colours.cmdbotlog)
+            botlogscmd.send(embed);
             break;
  //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
  // __      _______ _____  ______ ____    __  __ ______ __  __ ______    _____ ____  __  __ __  __          _   _ _____   _____  //
@@ -693,12 +1245,25 @@ bot.on("message", function(message){
                 "./bot-attach/spin.mp4"
               ]
             })
-        } else {
+            var botlogscmd = bot.guilds.get(secrets.logserver).channels.get(secrets.logchannel);
+            var embed = new Discord.RichEmbed()
+               .setAuthor("Command Run Event")
+               .setThumbnail("https://emojipedia-us.s3.amazonaws.com/thumbs/120/twitter/141/incoming-envelope_1f4e8.png")
+               .setDescription(`**Guild Name:** ${message.guild.name}\n**Guild ID:** ${message.guild.id}\n**User Name:** ${message.author.username}#${message.author.discriminator}\n**User ID:** ${message.author.id}\n**Required Perms:** L1 Donor\n**Command:** \`${config.prefix}spin\``)
+               .setColor(colours.cmdbotlog)
+            return botlogscmd.send(embed);
+        } else
             var embed = new Discord.RichEmbed()
                 .setDescription("<a:no:446899005054648322> **Insufficient Permission(s)** - You must be a Level 1 Donator to use this command.")
                 .setColor(colours.error)
             message.channel.send(embed);
-            }
+            var botlogserr = bot.guilds.get(secrets.logserver).channels.get(secrets.logchannel);
+            var embed = new Discord.RichEmbed()
+               .setAuthor("Error Event")
+               .setThumbnail("https://emojipedia-us.s3.amazonaws.com/thumbs/120/twitter/141/police-cars-revolving-light_1f6a8.png")
+               .setDescription(`**Guild Name:** ${message.guild.name}\n**Guild ID:** ${message.guild.id}\n**User Name:** ${message.author.username}#${message.author.discriminator}\n**User ID:** ${message.author.id}\n**Error Type:** Insufficient Permission(s)\n**Command:** \`${config.prefix}spin\``)
+               .setColor(colours.errbotlog)
+            botlogserr.send(embed);
             break;
         case "scumbag":
         if(perm.alldonor.includes(message.author.id)) {
@@ -712,12 +1277,79 @@ bot.on("message", function(message){
                 "./bot-attach/scumbag.mp4"
               ]
             })
-        } else {
+            var botlogscmd = bot.guilds.get(secrets.logserver).channels.get(secrets.logchannel);
+            var embed = new Discord.RichEmbed()
+               .setAuthor("Command Run Event")
+               .setThumbnail("https://emojipedia-us.s3.amazonaws.com/thumbs/120/twitter/141/incoming-envelope_1f4e8.png")
+               .setDescription(`**Guild Name:** ${message.guild.name}\n**Guild ID:** ${message.guild.id}\n**User Name:** ${message.author.username}#${message.author.discriminator}\n**User ID:** ${message.author.id}\n**Required Perms:** L1 Donor\n**Command:** \`${config.prefix}scumbag\``)
+               .setColor(colours.cmdbotlog)
+            return botlogscmd.send(embed);
+        } else
             var embed = new Discord.RichEmbed()
                 .setDescription("<a:no:446899005054648322> **Insufficient Permission(s)** - You must be a Level 1 Donator to use this command.")
                 .setColor(colours.error)
             message.channel.send(embed);
+            var botlogserr = bot.guilds.get(secrets.logserver).channels.get(secrets.logchannel);
+            var embed = new Discord.RichEmbed()
+               .setAuthor("Error Event")
+               .setThumbnail("https://emojipedia-us.s3.amazonaws.com/thumbs/120/twitter/141/police-cars-revolving-light_1f6a8.png")
+               .setDescription(`**Guild Name:** ${message.guild.name}\n**Guild ID:** ${message.guild.id}\n**User Name:** ${message.author.username}#${message.author.discriminator}\n**User ID:** ${message.author.id}\n**Error Type:** Insufficient Permission(s)\n**Command:** \`${config.prefix}scumbag\``)
+               .setColor(colours.errbotlog)
+            botlogserr.send(embed);
+            break;
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//  _    _ _______ _____ _      _____ _________     __   _____ ____  __  __ __  __          _   _ _____   _____   //
+// | |  | |__   __|_   _| |    |_   _|__   __\ \   / /  / ____/ __ \|  \/  |  \/  |   /\   | \ | |  __ \ / ____|  //
+// | |  | |  | |    | | | |      | |    | |   \ \_/ /  | |   | |  | | \  / | \  / |  /  \  |  \| | |  | | (___    //
+// | |  | |  | |    | | | |      | |    | |    \   /   | |   | |  | | |\/| | |\/| | / /\ \ | . ` | |  | |\___ \   //
+// | |__| |  | |   _| |_| |____ _| |_   | |     | |    | |____ |__| | |  | | |  | |/ ____ \| |\  | |__| |____) |  //
+//  \____/   |_|  |_____|______|_____|  |_|     |_|     \_____\____/|_|  |_|_|  |_/_/    \_\_| \_|_____/|_____/   //
+//                                                                                                                //
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////                                                                   
+        case "weather":
+        var placenoexist = new Discord.RichEmbed()
+               .setDescription("<a:no:446899005054648322> **Unknown Location** - The location you entered is either not real or not real.")
+               .setColor(colours.error);
+
+        weather.find({search: args.join(" "), degreeType: "C"}, function(err, result) { 
+            if (err) message.channel.send(err);
+
+            if (result === undefined || result.length === 0) {
+                message.channel.send(placenoexist)
+                var botlogserr = bot.guilds.get(secrets.logserver).channels.get(secrets.logchannel);
+                var embed = new Discord.RichEmbed()
+                   .setAuthor("Error Event")
+                   .setThumbnail("https://emojipedia-us.s3.amazonaws.com/thumbs/120/twitter/141/police-cars-revolving-light_1f6a8.png")
+                   .setDescription(`**Guild Name:** ${message.guild.name}\n**Guild ID:** ${message.guild.id}\n**User Name:** ${message.author.username}#${message.author.discriminator}\n**User ID:** ${message.author.id}\n**Error Type:** Unknown Weather Location`)
+                   .setColor(colours.errbotlog)
+                return botlogserr.send(embed); 
             }
+ 
+            var current = result[0].current; 
+            var location = result[0].location;
+
+            var embed = new Discord.RichEmbed()
+               .setAuthor(`Weather for ${current.observationpoint}`, "https://emojipedia-us.s3.amazonaws.com/thumbs/120/twitter/141/pushpin_1f4cc.png")
+               .setDescription(`**${current.skytext}**\nﾠ ﾠ`) 
+               .setThumbnail(current.imageUrl) 
+               .setColor(message.guild.me.displayColor) 
+               .addField("🕒 Timezone",`UTC ${location.timezone}`, true) 
+               .addField("❓ Degree Type",`${location.degreetype}`, true)
+               .addField("🌡 Temperature",`${current.temperature} Degrees`, true)
+               .addField("🤒 Feels Like",`${current.feelslike} Degrees`, true)
+               .addField("🌬 Winds",`${current.winddisplay}`, true)
+               .addField("💧 Humidity",`${current.humidity}%`, true)
+               .setFooter("JackBot | Developed by Cairo#4883", config.botownerpfp)
+            message.channel.send({embed});
+
+            var botlogscmd = bot.guilds.get(secrets.logserver).channels.get(secrets.logchannel);
+            var embed = new Discord.RichEmbed()
+               .setAuthor("Command Run Event")
+               .setThumbnail("https://emojipedia-us.s3.amazonaws.com/thumbs/120/twitter/141/incoming-envelope_1f4e8.png")
+               .setDescription(`**Guild Name:** ${message.guild.name}\n**Guild ID:** ${message.guild.id}\n**User Name:** ${message.author.username}#${message.author.discriminator}\n**User ID:** ${message.author.id}\n**Command:** \`${config.prefix}weather\``)
+               .setColor(colours.cmdbotlog)
+            return botlogscmd.send(embed);
+            });
             break;
             ///////////////////////////////////////////////////////////////////////////////
             //     _  _____ _____    ____ ___  __  __ __  __    _    _   _ ____  ____    //
@@ -734,43 +1366,131 @@ bot.on("message", function(message){
             //                                                                           //
             ///////////////////////////////////////////////////////////////////////////////
         case "ate-check":
-            if (message.author.id !== config.botowner)
+            if (message.author.id !== config.botowner) {
             var embed = new Discord.RichEmbed()
                 .setDescription("<a:no:446899005054648322> **Insufficient Permission(s)** - You must be a BotOwner to use this command.")
                 .setColor(colours.error)
-            message.channel.send(embed)
-            if (message.author.id !== config.botowner) return
+            message.channel.send(embed);
+            var botlogserr = bot.guilds.get(secrets.logserver).channels.get(secrets.logchannel);
+            var embed = new Discord.RichEmbed()
+               .setAuthor("Error Event")
+               .setThumbnail("https://emojipedia-us.s3.amazonaws.com/thumbs/120/twitter/141/police-cars-revolving-light_1f6a8.png")
+               .setDescription(`**Guild Name:** ${message.guild.name}\n**Guild ID:** ${message.guild.id}\n**User Name:** ${message.author.username}#${message.author.discriminator}\n**User ID:** ${message.author.id}\n**Error Type:** Insufficient Permission(s)\n**Command:** \`${config.prefix}ate-check\``)
+               .setColor(colours.errbotlog)
+            return botlogscmd.send(embed);
+            } else
             var embed = new Discord.RichEmbed()
                 .setDescription("<a:yes:446899005125820427> **Success** - message sent to the console.")
                 .setColor(colours.success)
-            message.channel.send(embed)
-            console.log(info("SYSTEM NOTICE: Console Responsiveness Check"))
-            console.log(warn("SYSTEM WARNING: Ignore all errors listed below"))
+            message.channel.send(embed);
+            console.log(info("SYSTEM NOTICE: Console Responsiveness Check"));
+            console.log(warn("SYSTEM WARNING: Ignore all errors listed below"));
+            var botlogscmd = bot.guilds.get(secrets.logserver).channels.get(secrets.logchannel);
+            var embed = new Discord.RichEmbed()
+               .setAuthor("Command Run Event")
+               .setThumbnail("https://emojipedia-us.s3.amazonaws.com/thumbs/120/twitter/141/incoming-envelope_1f4e8.png")
+               .setDescription(`**Guild Name:** ${message.guild.name}\n**Guild ID:** ${message.guild.id}\n**User Name:** ${message.author.username}#${message.author.discriminator}\n**User ID:** ${message.author.id}\n**Required Perms:** BotOwner\n**Command:** \`${config.prefix}ate-check\``)
+               .setColor(colours.cmdbotlog)
+            botlogscmd.send(embed);
             break;
         case "ate-ping":
-            if (message.author.id !== config.botowner)
+            if (message.author.id !== config.botowner) {
             var embed = new Discord.RichEmbed()
                 .setDescription("<a:no:446899005054648322> **Insufficient Permission(s)** - You must be a BotOwner to use this command.")
                 .setColor(colours.error)
             message.channel.send(embed);
-            if (message.author.id !== config.botowner) return
+            var botlogserr = bot.guilds.get(secrets.logserver).channels.get(secrets.logchannel);
             var embed = new Discord.RichEmbed()
-                .setDescription((new Date().getTime() - message.createdTimestamp + " ms"))
-                .setFooter("This method is highly inaccurate and depreciated.")
+               .setAuthor("Error Event")
+               .setThumbnail("https://emojipedia-us.s3.amazonaws.com/thumbs/120/twitter/141/police-cars-revolving-light_1f6a8.png")
+               .setDescription(`**Guild Name:** ${message.guild.name}\n**Guild ID:** ${message.guild.id}\n**User Name:** ${message.author.username}#${message.author.discriminator}\n**User ID:** ${message.author.id}\n**Error Type:** Insufficient Permission(s)\n**Command:** \`${config.prefix}ate-ping\``)
+               .setColor(colours.errbotlog)
+            return botlogserr.send(embed);
+            } else
+            var embed = new Discord.RichEmbed()
+               .addField("💓 Heartbeat",`${bot.ping}ms\nﾠ ﾠ`)
+               .addField("📡 Client Response", new Date().getTime() - message.createdTimestamp + "ms")
+               .setColor(message.guild.me.displayColor)
             message.channel.send(embed);
+            var botlogscmd = bot.guilds.get(secrets.logserver).channels.get(secrets.logchannel);
+            var embed = new Discord.RichEmbed()
+               .setAuthor("Command Run Event")
+               .setThumbnail("https://emojipedia-us.s3.amazonaws.com/thumbs/120/twitter/141/incoming-envelope_1f4e8.png")
+               .setDescription(`**Guild Name:** ${message.guild.name}\n**Guild ID:** ${message.guild.id}\n**User Name:** ${message.author.username}#${message.author.discriminator}\n**User ID:** ${message.author.id}\n**Required Perms:** BotOwner\n**Command:** \`${config.prefix}ate-ping\``)
+               .setColor(colours.cmdbotlog)
+            botlogscmd.send(embed);
             break;
         case "ate-guilds":
-            if (message.author.id !== config.botowner)
+            if (message.author.id !== config.botowner) {
             var embed = new Discord.RichEmbed()
                 .setDescription("<a:no:446899005054648322> **Insufficient Permission(s)** - You must be a BotOwner to use this command.")
                 .setColor(colours.error)
             message.channel.send(embed);
-            if (message.author.id !== config.botowner) return
-            let string = '';
-            bot.guilds.forEach(guild=>{
-            string+= 'Guild name: ' + guild.name + '\n';
-            })
-            message.channel.send(string);
+            var botlogserr = bot.guilds.get(secrets.logserver).channels.get(secrets.logchannel);
+            var embed = new Discord.RichEmbed()
+               .setAuthor("Error Event")
+               .setThumbnail("https://emojipedia-us.s3.amazonaws.com/thumbs/120/twitter/141/police-cars-revolving-light_1f6a8.png")
+               .setDescription(`**Guild Name:** ${message.guild.name}\n**Guild ID:** ${message.guild.id}\n**User Name:** ${message.author.username}#${message.author.discriminator}\n**User ID:** ${message.author.id}\n**Error Type:** Insufficient Permission(s)\n**Command:** \`${config.prefix}ate-guilds\``)
+               .setColor(colours.errbotlog)
+            return botlogserr.send(embed);
+            } else
+            var embed = new Discord.RichEmbed()
+               .setDescription(":minidisc: I am currently in " + bot.guilds.size + "guilds")
+               .setColor(message.guild.me.displayColor)
+            message.channel.send(embed);
+            var botlogscmd = bot.guilds.get(secrets.logserver).channels.get(secrets.logchannel);
+            var embed = new Discord.RichEmbed()
+               .setAuthor("Command Run Event")
+               .setThumbnail("https://emojipedia-us.s3.amazonaws.com/thumbs/120/twitter/141/incoming-envelope_1f4e8.png")
+               .setDescription(`**Guild Name:** ${message.guild.name}\n**Guild ID:** ${message.guild.id}\n**User Name:** ${message.author.username}#${message.author.discriminator}\n**User ID:** ${message.author.id}\n**Required Perms:** BotOwner\n**Command:** \`${config.prefix}ate-guilds\``)
+               .setColor(colours.cmdbotlog)
+            botlogscmd.send(embed);
+            break;
+        case "ate-restart":
+            if (message.author.id !== config.botowner) {
+            var embed = new Discord.RichEmbed()
+                .setDescription("<a:no:446899005054648322> **Insufficient Permission(s)** - You must be a BotOwner to use this command.")
+                .setColor(colours.error)
+            message.channel.send(embed);
+            var botlogserr = bot.guilds.get(secrets.logserver).channels.get(secrets.logchannel);
+            var embed = new Discord.RichEmbed()
+               .setAuthor("Error Event")
+               .setThumbnail("https://emojipedia-us.s3.amazonaws.com/thumbs/120/twitter/141/police-cars-revolving-light_1f6a8.png")
+               .setDescription(`**Guild Name:** ${message.guild.name}\n**Guild ID:** ${message.guild.id}\n**User Name:** ${message.author.username}#${message.author.discriminator}\n**User ID:** ${message.author.id}\n**Error Type:** Insufficient Permission(s)\n**Command:** \`${config.prefix}ate-restart\``)
+               .setColor(colours.errbotlog)
+            return botlogserr.send(embed);
+            } else
+            var botlogsrestart = bot.guilds.get(secrets.logserver).channels.get(secrets.logchannel);
+            var embed = new Discord.RichEmbed()
+               .setAuthor("Bot Account Restart")
+               .setThumbnail("https://emojipedia-us.s3.amazonaws.com/thumbs/120/twitter/141/orange-heart_1f9e1.png")
+               .setDescription(`**Current Guild Count:** ${bot.guilds.size}\n**Current Bot Uptime:** ${bot.uptime}ms\n**Restart Type:** Manual\n**Restart Executor:** ${message.author.username}#${message.author.discriminator}\n**Restart Executor ID:** ${message.author.id}`)
+               .setColor(colours.restartbotlog)
+            botlogsrestart.send(embed);
+            pm2.restart('index', function() {});
+            break;
+        case "ate-stop":
+            if (message.author.id !== config.botowner) {
+            var embed = new Discord.RichEmbed()
+                .setDescription("<a:no:446899005054648322> **Insufficient Permission(s)** - You must be a BotOwner to use this command.")
+                .setColor(colours.error)
+            message.channel.send(embed);
+            var botlogserr = bot.guilds.get(secrets.logserver).channels.get(secrets.logchannel);
+            var embed = new Discord.RichEmbed()
+               .setAuthor("Error Event")
+               .setThumbnail("https://emojipedia-us.s3.amazonaws.com/thumbs/120/twitter/141/police-cars-revolving-light_1f6a8.png")
+               .setDescription(`**Guild Name:** ${message.guild.name}\n**Guild ID:** ${message.guild.id}\n**User Name:** ${message.author.username}#${message.author.discriminator}\n**User ID:** ${message.author.id}\n**Error Type:** Insufficient Permission(s)\n**Command:** \`${config.prefix}ate-stop\``)
+               .setColor(colours.errbotlog)
+            return botlogserr.send(embed);
+            } else
+            var botlogsstop = bot.guilds.get(secrets.logserver).channels.get(secrets.logchannel);
+            var embed = new Discord.RichEmbed()
+               .setAuthor("Bot Account Stop")
+               .setThumbnail("https://emojipedia-us.s3.amazonaws.com/thumbs/120/twitter/141/heavy-black-heart_2764.png")
+               .setDescription(`**Current Guild Count:** ${bot.guilds.size}\n**Current Bot Uptime:** ${bot.uptime}ms\n**Stop Executor:** ${message.author.username}#${message.author.discriminator}\n**Stop Executor ID:** ${message.author.id}`)
+               .setColor(colours.stopbotlog)
+            botlogsstop.send(embed);
+            pm2.stop('index', function() {});
             break;
     }
 });
@@ -786,6 +1506,13 @@ bot.on("message", message => {
                .setDescription("<a:no:446899005054648322> **Insufficient Permission(s)** - You must be a BotOwner to use this command.")
                .setColor(colours.error)
             message.channel.send(embed);
+            var botlogserr = bot.guilds.get(secrets.logserver).channels.get(secrets.logchannel);
+            var embed = new Discord.RichEmbed()
+               .setAuthor("Error Event")
+               .setThumbnail("https://emojipedia-us.s3.amazonaws.com/thumbs/120/twitter/141/police-cars-revolving-light_1f6a8.png")
+               .setDescription(`**Guild Name:** ${message.guild.name}\n**Guild ID:** ${message.guild.id}\n**User Name:** ${message.author.username}#${message.author.discriminator}\n**User ID:** ${message.author.id}\n**Error Type:** Insufficient Permission(s)\n**Command:** \`${config.prefix}ate-eval\``)
+               .setColor(colours.errbotlog)
+            botlogserr.send(embed);
     if (message.author.id !== config.botowner) return
     try {
       const code = args.join(" ");
@@ -798,6 +1525,13 @@ bot.on("message", message => {
     } catch (err) {
       message.channel.send(`\`ERROR\` \`\`\`xl\n${clean(err)}\n\`\`\``);
     }
+    var botlogscmd = bot.guilds.get(secrets.logserver).channels.get(secrets.logchannel);
+    var embed = new Discord.RichEmbed()
+       .setAuthor("Command Run Event")
+       .setThumbnail("https://emojipedia-us.s3.amazonaws.com/thumbs/120/twitter/141/incoming-envelope_1f4e8.png")
+       .setDescription(`**Guild Name:** ${message.guild.name}\n**Guild ID:** ${message.guild.id}\n**User Name:** ${message.author.username}#${message.author.discriminator}\n**User ID:** ${message.author.id}\n**Required Perms:** BotOwner\n**Command:** \`${config.prefix}ate-eval\``)
+       .setColor(colours.cmdbotlog)
+    botlogscmd.send(embed);
   }
 });
 
